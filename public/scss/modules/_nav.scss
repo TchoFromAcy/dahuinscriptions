@@ -1,0 +1,103 @@
+.navbar-default{
+  
+  
+  background:transparent; //rgba($marron,0.4);
+  border:none;
+  color:$jaune !important;
+  
+  .navbar-brand{width:150px;
+  position:relative;
+  
+  height:150px; border-radius:75px; border:2px solid $jaune; background:white;padding:15px;
+  display:none;
+  float:none;
+  margin:10px auto;
+  svg{
+    
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  
+  }
+  
+  .navbar-nav{
+    text-align:center;
+    float:none;
+    
+  }
+  
+  a{
+     font-family:$AllerBold;
+     font-size:20px;
+     text-transform:uppercase;
+    color:$marron !important;
+    &:hover{
+      color:$jaune !important;
+      
+    }
+   
+  }
+  li{
+    position:relative;
+    display:block;
+    float:none !important;
+    
+     &.active a, &.active a:hover{
+      color:$jaune !important;
+      background-color:transparent !important;
+    }
+    &:active{
+      //background:rgba($marron,0.4);
+      
+    }
+    
+    &:before{
+      content:' ';
+      position:absolute;
+      width:0%;
+      left:0;
+      height:100%;
+      background:$marron;
+      transition:width 0.3s ease-out;
+      bottom:0;
+    }
+    &:hover:before, &.active:before{
+      width:100%;
+      
+    }
+    
+      &.listeInscrits {
+  
+  margin-top:65px;
+  color:white;
+  padding:10px;
+  font-size:16px;
+  background: #274646;
+  transform: rotate(8deg);
+  
+
+a{
+  font-size:16px;
+  color:white !important;
+  text-transform:none;
+  padding:0 !important;
+  
+}
+  &:before{content:'';background:transparent; width:0;}
+      &:hover:before, &.active:before{
+      width:0%;
+      
+    }
+  
+}
+    
+  }
+
+  
+}
+
+
+
+

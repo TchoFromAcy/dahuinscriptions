@@ -1,0 +1,787 @@
+<?php
+
+
+$isDev = ($_SERVER['REMOTE_ADDR'] == "90.27.62.43");
+$mapper = new Default_Model_TournoiMapper();
+
+//$this->closed=false;//$_GET['key']!=='9576d081f06a7a4c6c2ac79e2f597247';
+
+$all = $mapper->execQuery("select * from tournoi where (confirm=1 or confirm is null or confirm=0) and update_date like '%2018%' order by nom, prenom  ", []);
+
+$this->isFull = true; //count($all) > $this->max;
+$remaining =0;//this->max - count($all);
+
+
+//$this->headLink ()->appendStylesheet ( '/_js/lib/dropzone/css/dropzone.css' )->appendStylesheet ( '//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css' )->appendStylesheet ( '/_js/lib/bootstrap-modal/css/bootstrap-modal.css' )->appendStylesheet ( '/_js/lib/bootstrap-modal/css/bootstrap-modal-bs3patch.css' )->appendStylesheet ( '/_js/pnotify.custom.min.css' );
+//$this->headScript ()->appendFile ( '/_js/lib/bootstrap-modal/js/bootstrap-modal.js' )->appendFile ( '/_js/lib/bootstrap-modal/js/bootstrap-modalmanager.js' )->appendFile ( '/_js/lib/ajaxForm.js' )->appendFile ( '/_js/pnotify.custom.min.js' );
+
+$this->headLink()->prependStylesheet('/_css/styles.css');
+
+$this->headLink()->prependStylesheet('//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css')->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/7.0.0/css/bootstrap-slider.css')
+    ->appendStylesheet('/_css/css/flag-icon.css')->appendStylesheet('/_js/lib/bootstrap-modal/css/bootstrap-modal.css')->appendStylesheet('/_js/lib/bootstrap-modal/css/bootstrap-modal-bs3patch.css')->appendStylesheet('/_js/pnotify.custom.min.css');;
+$this->headScript()->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/7.0.0/bootstrap-slider.min.js')->appendFile('/_js/lib/bootstrap-modal/js/bootstrap-modal.js')->appendFile('/_js/lib/bootstrap-modal/js/bootstrap-modalmanager.js')->appendFile('/_js/lib/ajaxForm.js')->appendFile('/_js/pnotify.custom.min.js')
+
+
+?>
+
+
+<section id="intro" class="col-md-12">
+    <div id="titreCont" style="width:auto; position:relative;">
+
+        <div id="dahuProd">
+            Dahultimate
+
+
+        </div>
+
+        <div id="production">production</div>
+    </div>
+
+    <div id="presente">
+        vous pr&eacute;sente
+    </div>
+
+    <div id="tournamentNameDiv">
+
+        <div id="tournamentName">
+
+            Le Bornes to be <span class="big2">3</span>
+
+        </div>
+
+        <div id="year"><span>18/19 Ao&ucirc;t 2018</span></div>
+
+    </div>
+
+    <?php if ($isDev):
+
+
+        ?>
+        <div id="compteur"></div>
+
+    <?php endif; ?>
+</section>
+
+<aside class="col-xs-3" id="aside-panel">
+    <header>
+        <h1>Bornes to be <span class="big2">3</span></h1>
+        <time class="when"><span class="sav">18/19 Ao&ucirc;t 2018</span><span class="fr" style="display:none">18/19 Ao&ucirc;t 2018</span><span
+                    class="uk" style="display:none">Aug. 18 &amp; 19<sup>th</sup><br/>2018</span></time>
+        <p class="lieu">Saint-Ferreol (74) <span class="uk" style="display:none">- France</span></p>
+    </header>
+
+
+    <div class="clearfix"></div>
+    <nav class="navbar navbar-default text-center">
+        <div class="col-xs-8 col-xs-offset-2">
+
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                        aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+
+            </div>
+
+
+            <div class="collapse navbar-collapse" id="navbar">
+                <ul class="nav navbar-nav">
+                    <!-- <li class="active"><a href="#tournoi" id="tounoi-anchor">Le Tournoi</a></li> -->
+                    <li><a href="#infos" class="active" id="infos-anchor"><span
+                                    class="sav">Qu&eacute; c'est ?</span><span class="fr" style="display:none">Qu'est-ce donc ?</span><span
+                                    class="uk" style="display:none">What is it ?</span></a></li>
+                    <li><a href="#inscription" id="inscription-anchor"><span class="sav">Inscription</span><span
+                                    class="fr" style="display:none">Inscription</span><span class="uk"
+                                                                                            style="display:none">Subscription</span></a>
+                    </li>
+
+
+                    <?php if (count($all) > 0): ?>
+                        <li class="listeInscrits">
+
+                            <span class="sav">Y'a </span><span class="fr" style="display:none">D&eacute;j&agrave; </span><span
+                                    class="uk" style="display:none">Already</span> <?php echo count($all) ?> <span
+                                    class="sav">monchu<?php if (count($all) > 1) : ?>s<?php endif; ?>
+                                d'inscrit<?php if (count($all) > 1) : ?>s<?php endif; ?></span><span class="fr"
+                                                                                                     style="display:none">personne<?php if (count($all) > 1) : ?>s<?php endif; ?>
+                                inscrite<?php if (count($all) > 1) : ?>s<?php endif; ?></span><span class="uk"
+                                                                                                    style="display:none"> subscribers</span><br/>
+                            <a href="#" id="listeInscrits"><span class="sav">Voir la liste</span><span class="fr"
+                                                                                                       style="display:none">Voir la liste</span><span
+                                        class="uk" style="display:none">See the list</span></a>
+                        </li>
+
+
+                        <script>$('#listeInscrits').bind('click', function (e) {
+                                $('#listeModal').modal();
+                            });</script>
+                    <?php endif; ?>
+
+                </ul>
+
+
+            </div>
+        </div>
+    </nav>
+
+</aside>
+
+<div class="col-xs-9 col-xs-offset-3" id="cont">
+    <ul class="list-unstyled affix-top" id="langTab">
+        <li class="selected"><a data-lang="sav"><span class="flag-icon flag-icon-sav"></span></a></li>
+        <li><a data-lang="fr"><span class="flag-icon flag-icon-fr"></span></a></li>
+        <li><a data-lang="uk"><span class="flag-icon flag-icon-gb"></span></a></li>
+
+    </ul>
+
+    <div class="clearfix"></div>
+
+    <section id="infos" class="parallax" data-parallax="100">
+
+
+        <?php if($remaining>0) : ?>
+
+            <div class="alert alert-warning">
+
+                <span class="sav fr">Il reste </span><span class="uk"
+                                                           style="display:none">There is </span>
+                <?php echo $remaining ?> place<?php echo $remaining>1?"s":"" ?> <span class="uk"
+                                                                                      style="display:none"> left</span>
+
+            </div>
+
+        <?php elseif($remaining ==0) : ?>
+
+            <div class="alert alert-warning">
+
+                <span class="sav fr">Il n'y a plus de place mais tu peux toujours t'inscrire en liste d'attente !</span><span class="uk"
+                                                                                                                              style="display:none">The tournament is full, but you can still subscribe to the waiting list </span>
+
+            </div>
+
+        <?php endif ?>
+        <div class="sav">
+
+            <?php echo $this->partial('index/sav.phtml'); ?>
+
+        </div>
+
+
+        <div class="fr" style="display:none">
+            <?php echo $this->partial('index/fr.phtml') ?>
+
+        </div>
+
+
+        <div class="uk" style="display:none">
+
+            <?php echo $this->partial('index/uk.phtml') ?>
+
+        </div>
+
+        <div class="clearfix"></div>
+    </section>
+
+    <section id="inscription" class="parallax" data-parallax="400">
+
+
+        <h2><span class="sav">Inscription</span><span class="fr" style="display:none">Inscription</span><span class="uk"
+                                                                                                              style="display:none">Subscription</span>
+        </h2>
+
+        <?php if (!$this->closed): ?>
+
+        <?php if(!$this->isFull) :?>
+            <p>
+	<span class="sav">
+	<strong>Alors, t'es motiv&eacute; ?</strong><br/>Inscris-toi vite n'en remplissant le formulaire ci-dessous.
+	</span>
+                <span class="fr" style="display:none">
+	<strong>Alors, t'es motiv&eacute; ?</strong><br/>Inscris-toi vite en remplissant le formulaire ci-dessous.
+	</span>
+                <span class="uk" style="display:none">
+	<strong>So you're hot to join ?</strong><br/>Please, fill in the form below to subscribe
+	</span>
+            </p>
+        <?php else : ?>
+
+            <p>
+                <em class="fa fa-frown-o fa-2x"></em>
+
+	<span class="sav fr">
+	<strong> Le tournoi est complet ! </strong><br/>mais tu peux toujours t'inscrire en liste d'attente en remplissant le formulaire ci-dessous.
+	</span>
+
+                <span class="uk" style="display:none">
+	<strong>We are full !</strong><br/>But if you want to be in the waiting list, fill in the form below !
+	</span>
+            </p>
+
+        <?php endif; ?>
+
+
+            <form class="form">
+                <fieldset class="col-md-6">
+                    <legend>
+		<span class="sav">
+	Dis-nous en un peu sur toi
+	</span>
+                        <span class="fr" style="display:none">
+	Qui es tu ?
+	</span>
+                        <span class="uk" style="display:none">
+	Who are you ?
+	</span>
+
+                    </legend>
+                    <div class="form-group col-md-12">
+
+                        <label for="nom">Ton nom</label>
+
+                        <div class="input-group">
+                            <input type="text" name="nom" id="nom" class="form-control"/>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group col-md-12">
+
+                        <label for="prenom">Ton petit nom</label>
+
+                        <div class="input-group">
+                            <input type="text" name="prenom" id="prenom" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+
+                        <label for="email">Ton email</label>
+
+                        <div class="input-group">
+                            <input type="text" name="email" id="email" class="form-control"/>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group col-md-12">
+
+                        <label for="dob">Date de naissance</label>
+
+                        <div class="input-group">
+                            <input name="dob" id="dob" class="form-control" placeholder="01/12/1990"/>
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-group col-md-12">
+
+                        <label for="sexe">Sexe</label>
+
+                        <div class="input-group">
+                            <select name="sexe" id="sexe" class="form-control">
+                                <option value="1">Je suis une femme</option>
+                                <option value="2">Je suis un homme</option>
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group col-md-12">
+                        <label for="type">Je souhaite participer :</label>
+                        <div class="input-group">
+                            <select name="type" id="type" class="form-control">
+                                <option value="1">n'en tant que joueur</option>
+                                <option value="2">n'en tant qu'invit&eacute</option>
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="checkbox col-md-12">
+
+                        <label><span for="accompagne">Je serais accompagn&eacute; </span><input type="checkbox"
+                                                                                                name="accompagne"
+                                                                                                id="accompagne"
+                                                                                                value="1"/> </label>
+                        <div class="clearfix"></div>
+
+
+                    </div>
+
+                    <div id="companionDiv" style="display:none">
+                        <div class="form-group col-md-6">
+                            <label for="adulte">Nb d'adulte(s) :</label>
+                            <div class="input-group">
+                                <input type="number" name="adulte" id="adulte" min="0" value="0" class="form-control"/>
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group col-md-6">
+                            <label for="enfant">Nb d'enfant(s) :</label>
+                            <div class="input-group">
+                                <input type="number" name="enfant" id="enfant" min="0" value="0" class="form-control"/>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="comment"><span class="sav">Un tit mot ?</span><span class="fr" style="display:none">Un commentaire ?</span><span
+                                    class="uk" style="display:none">Any comment ?</span></label>
+
+                        <div class="input-group">
+                            <textarea id="comment" name="comment" class="form-control"></textarea>
+                        </div>
+
+                    </div>
+
+                    <div class="clearfix"></div>
+                </fieldset>
+
+                <fieldset class="col-md-6" id="compFs">
+                    <legend><span class="sav">
+	Ton niveau &agrave; l'ultimate
+	</span>
+                        <span class="fr" style="display:none">
+	Ton niveau &agrave; l'ultimate
+	</span>
+                        <span class="uk" style="display:none">
+	Your ultimate skills
+	</span></legend>
+
+                    <div class="form-group col-md-12">
+
+                        <label for="club">Ton club</label>
+
+                        <div class="input-group">
+                            <input name="club" id="club" class="form-control"/>
+                        </div>
+
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" value="1" name="noclub" id="noclub"/>
+                                <span for="noclub">Je ne joue pas n'en club</span>
+                            </label>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <label for="poste1" class="cbLabel">O&ucirc; que tu joues ?</label>
+                        <div class="clearfix"></div>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="poste1" name="poste[]" value="1"> Handler
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="poste2" name="poste[]" value="2"> Middle
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" name="poste[]" id="poste3" value="3"> Deep
+                        </label>
+                        <p class="help-block" data-for="poste">&nbsp;</p>
+
+                    </div>
+
+                    <div class="form-group slider-group col-md-12">
+
+
+                        <label for="technique">Ton niveau technique <span
+                                    class="help-text">(technique pure et tactique)</span></label>
+
+                        <div class="input-group text-center">
+                            <span class="col-md-3">Chuis une vraie gniauque</span>
+                            <div class="col-md-6">
+                                <input id="technique" name="technique" class="slider form-control"
+                                       data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="10"
+                                       data-slider-step="1" data-slider-value="0" style="width:100%"/>
+                            </div>
+                            <span class="col-md-3">&Ccedil;a qu'est des dieux du frisbee ! </span>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group slider-group col-md-12">
+                        <label for="physique">Ton niveau physique</label>
+                        <div class="input-group text-center">
+                            <span class="col-md-3">Chuis un baban</span>
+                            <div class="col-md-6">
+                                <input id="physique" name="physique" class="slider form-control"
+                                       data-slider-id='ex2Slider' type="text" data-slider-min="0" data-slider-max="10"
+                                       data-slider-step="1" data-slider-value="0" style="width:100%"/>
+                            </div>
+                            <span class="col-md-3">Je peux pataler toute la journ&eacute;e sans &ecirc;tre vann&eacute;</span>
+                        </div>
+                    </div>
+
+
+                    <div class="clearfix"></div>
+                    <h3>
+                        <span class="sav">Informations compl&eacute;mentaires</span>
+                        <span class="fr" style="display:none">Informations compl&eacute;mentaires</span>
+                        <span class="uk" style="display:none">Additional information</span>
+
+                    </h3>
+
+                    <div class="form-group col-md-12">
+                        <label for="party"><span class="sav">Je serais pr&eacute;sent &agrave; la welcome party </span>
+                            <span class="fr"
+                                  style="display:none">Je serais pr&eacute;sent &agrave; la welcome party </span>
+                            <span class="uk" style="display:none">I'll be at the welcome party </span>
+
+                            :</label>
+                        <div class="input-group">
+                            <select name="party" id="party" class="form-control">
+                                <option value="1">Vi</option>
+                                <option value="2">Nan</option>
+                                <option value="3">Sais po</option>
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group col-md-12">
+                        <label for="regime"><span class="sav">Si tu manges (ou p&ocirc;) des trucs sp&eacute;ciaux, dis-y</span>
+                            <span class="fr" style="display:none">Si tu as un r&eacute;gime particulier, merci de le pr&eacute;ciser</span>
+                            <span class="uk" style="display:none">Tell us if you have a special diet</span>
+
+                            :</label>
+                        <div class="input-group">
+                            <textarea name="regime" id="regime" class="form-control"></textarea>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group col-md-12">
+                        <label for="playlist"><span class="sav">Une suggestion pour la playlist du tournoi ?</span>
+                            <span class="fr" style="display:none">Une suggestion pour la playlist du tournoi ?</span>
+                            <span class="uk"
+                                  style="display:none">Any song to suggest for the playlist of the tournament</span>
+
+                            :</label>
+                        <input name="waitinglist" value="<?php echo ($this->isFull)?1:0 ?>" type="hidden" />
+                        
+                        <div class="input-group">
+                            <textarea name="playlist" id="playlist" class="form-control"></textarea>
+
+                        </div>
+
+                    </div>
+
+                </fieldset>
+                <div class="clearfix"></div>
+
+                <div class="form-group col-md-6 ">
+
+                    <div class="clearfix"></div>
+
+
+                    <div class="col-md-6">
+                        <label for="captchaInput">Copie z'y le code *</label>
+                        <div class="input-group">
+
+
+                            <input type="text" class="form-control" id="captchaInput" name="captcha[input]" value=""
+                                   maxlength="6" required>
+                        </div>
+
+                    </div>
+                    <div id="captcha-container" class="col-md-6" style="">
+                        <?php echo $this->partial('captcha.phtml'); ?>
+                    </div>
+                    <div class="clearfix"></div>
+
+                </div>
+
+                <div class="text-center col-md-6">
+
+                    <button class="btn btn-primary" type="submit"><span
+                                class="sav">Clique-z-y et inscris-toi</span><span class="fr" style="display:none">Valide ton inscription</span><span
+                                class="uk" style="display:none">Go and subscribe</span></button>
+                </div>
+                <div class="clearfix"></div>
+
+                <div id="wait" class="col-md-3 text-center" style="display:none">
+                    <div class="col-md-6 col-md-offset-3">
+                        <svg id="circle-wait" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 77.3 91.3"
+                             style="overflow:visible" preserveAspectRatio="xMinYMin meet" xml:space="preserve">
+	
+ <circle cx="42.8" id="circle-wait3" cy="56.8" r="30.1" style="fill: #fdce7e"/>
+                            <circle cx="42.8" id="circle-wait1" cy="56.8" r="33"
+                                    style="fill: none;stroke: #9c1c18;stroke-miterlimit: 10;stroke-width: 3px"/>
+
+                            <path id="tick" d="M23,53.2L37.5,68.2,64.3,41.7" transform="translate(0.8 0)"
+                                  style="fill: none"/>
+                            <g id="tete2">
+                                <path d="M30.4,47.7C29,37.9,21.4,19,16.3,15.2S1,8.7,0,26.7C-2.4,19.7.6,8.1,9.7,6.2s22.8,5.7,30.1,36.9C35.2,47.3,31.6,47.9,30.4,47.7Z"
+                                      transform="translate(0.8 0)" style="fill: #bbab9e"/>
+                                <path d="M54.4,45c-0.4-7.2-1.7-34.7-8.8-41.4S30.4,1,28.5,3.9,24.4,11.6,24.8,16c1.1-5,4.2-12.6,10.1-12.3s10.1,10,9.1,39.6C46.6,44.7,51.6,46.5,54.4,45Z"
+                                      transform="translate(0.8 0)" style="fill: #bbab9e"/>
+                                <path d="M41.6,69.7c-1.1,2.7-3.8,9.6,3.6,12.4-2.1-3.5-1-7.3,1.3-11l-4.9-1.4h0Z"
+                                      transform="translate(0.8 0)" style="fill: #1e1e1c"/>
+                                <path d="M33.5,51.2c-1.3-1-6.5-3.8-9.9,2.6C28.4,56.9,32.4,54.8,33.5,51.2Z"
+                                      transform="translate(0.8 0)" style="fill: #9c1c18"/>
+                                <path d="M62.3,48.3c-1.1-1.2-5.8-4.7-10.2,1.1C56.4,53.2,60.6,51.7,62.3,48.3Z"
+                                      transform="translate(0.8 0)" style="fill: #9c1c18"/>
+                                <path d="M30.4,47.7C33.5,43.1,44,37.4,54.4,45c0.7,7.3,2.6,25.7-7.5,27.3S30.9,54.8,30.4,47.7Z"
+                                      transform="translate(0.8 0)" style="fill: #9c1c18"/>
+                                <path d="M34.7,48.2l-0.8-.7A6.3,6.3,0,0,1,37,45.4v1.1A4.8,4.8,0,0,0,34.7,48.2Z"
+                                      transform="translate(0.8 0)" style="fill: #1e1e1c"/>
+                                <path d="M48.6,45.7V44.6A6.3,6.3,0,0,1,52.2,46l-0.8.7A5.1,5.1,0,0,0,48.6,45.7Z"
+                                      transform="translate(0.8 0)" style="fill: #1e1e1c"/>
+                                <path d="M46.1,70.4l-0.7-.2,0.2,0.2v0.4h0Z" transform="translate(0.8 0)"
+                                      style="fill: #1e1e1c"/>
+                                <path d="M47.7,70.3V70.1h0V69.7h0V69.3h0.4l0.3-.9H48l-0.2.7v0.2l-0.2.7h0.1v0.2Z"
+                                      transform="translate(0.8 0)" style="fill: #1e1e1c"/>
+                                <g id="oeil_droit2">
+                                    <circle cx="53.5" cy="56.4" r="4.7" transform="translate(-14.7 92.2) rotate(-73.9)"
+                                            style="fill: #fff"/>
+                                    <circle cx="50.6" cy="58.2" r="0.9" transform="translate(-18.5 90.7) rotate(-73.9)"
+                                            style="fill: #1e1e1c"/>
+                                </g>
+                                <g id="oeil_gauche2">
+                                    <circle cx="35.6" cy="58.2" r="4.7" transform="translate(-29.4 76.3) rotate(-73.9)"
+                                            style="fill: #fff"/>
+                                    <circle cx="37.6" cy="55.3" r="0.9" transform="translate(-25.1 76.1) rotate(-73.9)"
+                                            style="fill: #1e1e1c"/>
+                                </g>
+                            </g>
+
+                            <circle cx="42.8" id="circle-wait2" cy="56.8" r="33"
+                                    style="fill: none;stroke: #9c1c18;stroke-miterlimit: 10;stroke-width: 4px"/>
+</svg>
+                    </div>
+                    <div class="clearfix"></div>
+
+                    <div id="waitText" class="col-md-12"></div>
+                    <div class="text-center">
+                        <button class="btn btn-primary" id="closeWait" style="display:none">Fermer</button>
+                    </div>
+
+                </div>
+
+            </form>
+        <?php else : ?>
+            <span class="fr sav">
+	Les inscriptions sont termin&eacute;es, mais tu peux toujours nous contacter si tu souhaites t'inscrire !<br/>
+        Nous te mettrons en liste d'attente et te contacterons si on veut bien de toi !
+	<a href="mailto:tournoi@dahultimate.com" style="color:black">tournoi@dahultimate.com</a>
+	
+	
+	</span>
+            <span class="uk" style="display:none">
+	Subscriptions are closed, but you can still contact us if you wish to come.<br/>
+        You will be on the waiting list and we may contact you if you're IN !
+	<a href="mailto:tournoi@dahultimate.com" style="color:black">tournoi@dahultimate.com</a>
+	</span>
+
+        <?php endif; ?>
+    </section>
+
+
+</div>
+
+
+<div class="clearfix"></div>
+
+
+<script>
+
+    var submited = false, tlWait = new TimelineMax({repeat: -1, paused: true}), tlWaitContent = $('#waitText').html();
+
+
+    //TweenMax.staggerFrom("#waitText span.letter", 0.3, { left:'-10px', top:'-10px', transformOrigin:'50% 50%',color: 'transparent', ease:Circ.easeOut, yoyo:true, repeat:-1 }, 0.2)
+
+
+    function initTween(id, rotation) {
+
+        if (submited == true) return;
+
+
+        new TweenMax.to($('#' + id), 1.5, {
+            rotation: '+=' + rotation,
+            ease: Linear.easeIn,
+            transformOrigin: '50% 50%',
+            onComplete: function () {
+                initTween(id, rotation)
+            }
+        });
+
+    }
+
+
+    function showResponse(response) {
+
+        submited = true;
+
+
+        $alert = $('<div class="alert alert-link alert-dismissible" role="alert">' +
+            '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+            '<strong></strong>' +
+            '</div>');
+        $('#captcha-container').click();
+
+
+        if (response.success) {
+
+            finishTween(response.msg);
+
+            $('form')[0].reset();
+
+            $('form').valid();
+            return;
+        }
+        else {
+
+            $alert.addClass('alert-danger');
+            $alert.find('strong').html('<em class="fa fa-check"></em> ' + response.error);
+        }
+
+        window.setTimeout(function () {
+
+            tlWait.stop(0);
+
+            resetForm();
+            $alert.insertBefore($('form')).alert();
+            TweenMax.to(window, 0.5, {
+                scrollTo: {
+                    y: $alert.position().top,
+                    autoKill: true // Allow scroll position to change outside itself
+                },
+                ease: Cubic.easeInOut
+            });
+        }, 5000);
+
+
+    }
+
+
+    var tlWaitCircle, pathCircle, pathTick;
+    MorphSVGPlugin.convertToPath("#circle-wait2");
+    pathCircle = $("#circle-wait2").attr('d');
+    pathTick = $("#tick").attr('d');
+
+    function tweenCircle() {
+
+        $('#waitText').html(objTrad[currLang].other.waitText);
+
+        tlWaitCircle = new TimelineMax({repeat: -1});
+        $.each($('#waitText .initial'), function (index, span) {
+
+            $(span).wrapEach(/(.)/g, "<span class=\"letter\">$1</span>");
+
+
+        });
+
+        tlWait = new TimelineMax({paused: true});
+
+        tlWait.add(TweenMax.staggerFrom("#waitText span.letter", 0.3, {
+            transformOrigin: '50% 50%',
+            color: 'transparent',
+            ease: Linear.easeOut,
+            yoyo: true,
+            repeat: -1
+        }, 0.1));
+
+
+        TweenMax.set($('#circle-wait1'), {opacity: 0.2});
+        TweenMax.set($('#tete2'), {opacity: 1});
+        TweenMax.set($('#circle-wait2'), {opacity: 0, morphSVG: pathCircle, stroke: '#9c1c18'});
+        TweenMax.set([$('#tick'), $('#circle-wait3')], {scale: 1, transformOrigin: '50% 50%'})
+        TweenMax.set($('#circle-wait3'), {fill: '#fdce7e'})
+
+        var tween1 = new TweenMax.to($('#circle-wait1'), 1, {
+            drawSVG: '100%',
+            ease: Circ.easeIn,
+            transformOrigin: '50% 50%'
+        });
+        var tween2 = new TweenMax.to($('#circle-wait1 '), 1, {
+            drawSVG: '0%',
+            rotation: "+=360",
+            transformOrigin: "50% 50%",
+            ease: Circ.easeOut
+        });
+        var tween3 = new TweenMax.fromTo($('#circle-wait1'), 2, {opacity: 0.2}, {opacity: 0.5, ease: Elastic.easeIn});
+
+        /*var tween5=new TweenMax.to($('#circleWait2'),0.4,{drawSVG:'100%', ease:Linear.easeIn, transformOrigin:'50% 50%'});
+        var tween4=new TweenMax.to($('#circleWait2 '),0.4,{drawSVG:'0%', rotation:"-=360", transformOrigin:"50% 50%", ease:Linear.easeIn});*/
+
+        tlWaitCircle.add(tween2).add(tween1).add(tween3, 0);//.add(tween4,0).add(tween5,0);
+
+
+        tlWaitCircle.play(0);
+        tlWait.play(0);
+
+
+    }
+
+
+    var tlFinish;
+
+    function resetForm() {
+        $('form fieldset, form button, form .form-group').fadeIn();
+        $('#wait').fadeOut();
+        $('body').removeClass('wait');
+        tlWait.kill();
+        tlWaitCircle.kill();
+        $('#closeWait').hide();
+
+        $('#accompagne, #noclub, #type').change();
+
+    }
+
+    function finishTween(text) {
+        tlWait.pause(0);
+
+        $('#waitText').html(text).css('opacity', 0);
+        tlWaitCircle.pause(0);
+
+
+        TweenMax.set($('#circle-wait1'), {opacity: 0});
+        TweenMax.set($('#circle-wait2'), {opacity: 0.2});
+
+
+        tlFinish = new TimelineMax();
+        var t1 = new TweenMax.to($('#circle-wait2'), 1.2, {
+            morphSVG: pathTick,
+            stroke: 'white',
+            opacity: 1,
+            ease: Elastic.easeOut,
+            scale: 0.7,
+            transformOrigin: '50% 50%'
+        });
+        var t2 = new TweenMax.to($('#tete2'), 0.5, {opacity: 0});
+        var t3 = new TweenMax.to($('#circle-wait3'), 0.5, {fill: 'green', scale: 0.7, transformOrigin: '50% 50%'});
+        var t4 = new TweenMax.to($('#waitText'), 0.5, {opacity: 1, transformOrigin: '50% 50%'});
+
+        tlFinish.add(t3).add(t2, 0).add(t1).add(t4, '-=0.5');
+
+        tlFinish.play(0);
+        //fdce7e
+
+        $('#closeWait').fadeIn();
+
+//window.setTimeout(resetForm,5000);
+
+
+    }
+
+
+</script>
+<script src="/_js/tournoi.js"></script>
+
+<?php echo $this->Partial("listejoueurs.phtml", ['all' => $all]); ?>
+
+
+

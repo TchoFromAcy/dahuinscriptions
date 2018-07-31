@@ -1,0 +1,267 @@
+<h1>Admin</h1>
+<div class="container">
+
+
+<form><?php  if(count($this->saisonList)>1):?>
+		<div class="form-group col-md-4">
+			<label class="control-label" for="saisonList">Choisir la saison :</label>
+			<select id="saisonList" name="saisonList" class="form-control">
+<?php  foreach($this->saisonList as $saison):?>
+
+<option value="<?php  echo $saison?>"
+					<?php  if($saison == $this->currentSeason):?> selected="selected"
+					<?php  endif;?>>Saison <?php echo $saison?></option>
+
+<?php  endforeach;?>
+
+</select>
+		</div><?php  endif;?>
+		<div class="form-group col-lg-5">
+			<label class="control-label"><em
+				class="fa fa-check-square fa-inverse"></em>S&eacute;lection <span
+				class="badge" id="numSelect">0</span></label>
+			<div class="clearfix"></div>
+			<div class="btn-group" role="group" id="actionDiv">
+				<button type="button" class="btn btn-default disabled">
+					<em class="fa fa-check"></em> Valider la s&eacute;lection
+				</button>
+				<button type="button" class="btn btn-default disabled" id="exportSelect">
+					<em class="fa fa-file-zip-o"></em> Exporter la s&eacute;lection
+				</button>
+			</div>
+		</div>
+
+	</form>
+
+	<script>
+
+$(document).ready(function(){
+
+
+	$('#saisonList').bind('change', function(e){
+
+
+		$('#demo_grid1').bs_grid('getAllOptions').ajaxFetchDataURL="/admin/ajax?format=json&apiCall=getInscriptions&currentSaison="+$(this).val();
+		$("#demo_grid1").hide();
+		$("#demo_grid1").bs_grid('displayGrid', true);
+
+		});
+	
+});
+
+</script>
+
+
+</div>
+<div id="demo_grid1" style="display: none"></div>
+
+
+
+<script>
+var currentSaison='<?php  echo $this->currentSeason?>';
+
+function displaySelection(){
+
+				var num = $( 'input[name="selectInscription[]"]:checked' ).length;
+				
+				$('#numSelect').html(num);
+
+				if(num)$('#actionDiv .btn').removeClass('disabled');
+				else $('#actionDiv .btn').addClass('disabled');
+				
+
+				
+	
+}
+
+function exportSelection(){
+	var checked = $( 'input[name="selectInscription[]"]:checked' );
+
+	if(checked==0) return;
+var params=["apiCall=exportLicences", "format=json"];
+	
+
+	$.each(checked, function(index, input){
+
+		params.push('inscr[]='+$(input).val());
+		
+
+		});
+
+
+	var url='/admin/ajax?'+params.join('&');
+	console.log(url);
+	window.open(url);
+
+	
+	
+	
+}
+
+
+
+function editLicence(e){
+
+e.preventDefault();
+var record =  $("#demo_grid1").bs_grid('getRecord',$(this).data('id'));
+
+console.log(record);
+	
+}
+
+$(document).ready(function(){
+
+
+	
+	moment.locale('fr');
+
+$('#exportSelect').bind('click',exportSelection);
+	
+
+	 $("#demo_grid1").bs_grid({
+
+		 onRowClick:function(event, data){
+
+		var cb = $('input[value="'+data.row_id+'"]');
+	
+		
+		$(cb).prop('checked', data.row_status=='selected').change();
+
+if(!$(cb)||!$(cb).is(':checked')) return $(this).bs_grid('selectedRows', 'mark_deselected', data.row_id);
+
+		
+			 },
+		 
+		 onDisplay: function() {
+			 $('#tools_demo_grid1').remove();
+
+
+$('.edit').bind('click', editLicence);
+				
+		$(this).show();
+
+			  var me =$(this);
+	  
+$('#selectAllInsc').bind('change',function(e){
+
+checked=$(this).is(':checked');
+$( 'input[name="selectInscription[]"]' ).prop('checked', checked);
+
+$.each($( 'input[name="selectInscription[]"]' ), function(index, cb){
+
+	if(!cb)
+		return;
+
+	if(checked) me.bs_grid('selectedRows', 'mark_selected', $(cb).attr('value'));
+	else me.bs_grid('selectedRows', 'mark_deselected', $(cb).attr('value'));
+
+	
+});//;
+
+
+displaySelection();
+	
+return;
+	
+});
+
+
+
+$( 'input[name="selectInscription[]"]' ).bind('change',displaySelection);
+		
+			  },
+	rowSelectionMode:'multiple',
+	rowsPerPage: 50,
+	        ajaxFetchDataURL: "/admin/ajax?format=json&apiCall=getInscriptions&currentSaison="+currentSaison,
+	        row_primary_key: "id_licence",
+	        useFilters:false,
+	        columns: [
+
+	                  
+
+		                  {field: null, header: '<input type="checkbox" id="selectAllInsc" value="ok" />', renderer:function(v, record){
+
+								if(!record) return'';
+
+								
+								if(record.certif==""||record.photo=="") return '';
+return '<input type="checkbox" name="selectInscription[]" value="'+record.id_licence+'" />';
+								
+
+			                  }},	
+
+			                  {field: "photo", header: "Photo", renderer:function(value, record){
+
+			  					if(!record) return '';
+
+			  					return '<img src="/photo-identite/thumb/'+record.saison+'/'+record.id_licence+'" class="img-responsive" />';
+			  	                	  
+			  		                  }},
+			                  
+			                  			  	            
+	            {field: "nom", header: "Nom"},
+	            {field: "prenom", header: "Pr&eacute;nom"},
+	            {field: "email", header: "Email"},
+	            {field: "adresse", header: "Adresse"},
+	            {field: "cp", header: "Code Postal"},
+	            {field: "ville", header: "Ville"},
+	            {field: "dob", header: "Date de naissance", renderer:function(v){
+	return moment(v).format('DD/MM/YYYY');
+
+		            }},
+		            {field:'profession', header:'Profession'},
+		            {field: "licence", header: "Licence", renderer:function(v, record){return (v==1?'Loisir':'Comp&eacute;tition')+(record&&record.etudiant==1?' - Etudiant':'')}},
+	            {field: "genre", header: "Sexe", renderer:function(value, record){
+
+					gender=value==1?'male':'female';
+	            	return '<em class="fa fa-'+gender+' fa-3x"></em>';
+	            					
+	            			            }},
+	            {field: "creation_date", header: "Date", renderer:function(value, record){
+					
+				return moment(value).format('D MMM YYYY');
+				
+		            }},
+		            {field:'certif', header:'Certificat',renderer: function(value, record){
+					
+			            if(!record) return;
+							if(value=='') return '<em class="fa fa-times" style="color:red"></em>';
+							return '<a href="/certif/'+record.saison+'/'+record.id_licence+'" target="_blank"><em class="fa fa-file-pdf-o fa-3x"></em></a>';
+
+			            }},
+		            {field: "saison", header: "Saison"},
+		            {field:null,header:'', renderer:function(value, record){
+
+		            	if(!record) return '';
+
+		            	
+					return '<em class="fa fa-pencil edit" data-id="'+(record?record.id_licence:null)+'"></em>';
+						
+			            }}
+	        ],
+	 
+	        sorting: [
+	         
+{sortingName: "Date d'enregistrement", field: "creation_date", order: "descending"},
+	            {sortingName: "Nom", field: "nom", order: "ascending"},
+	            {sortingName: "Pr&eacute;nom", field: "prenom", order: "ascending"}
+	            
+	        ]
+
+
+
+	
+});
+});
+
+</script>
+
+<style>
+.tools {
+	display: none;
+}
+
+#demo_grid1 th {
+	font-size: 12px;
+}
+</style>

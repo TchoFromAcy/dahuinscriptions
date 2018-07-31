@@ -1,0 +1,74 @@
+// Colors
+$main-blue: #a8d3cf;
+$blue: $main-blue;
+$salmon: #f5b3a1;
+$red: #f84c30;
+$green: #c6cf00;
+$brown: #5f4b3f;
+$taupe: #d08c6e;
+$green-alt: #bdd372;
+$salmon-alt: #f57d62;
+$jaune:#fdce7d;
+$marron:#9b1a15;
+
+
+
+$loading-bar-color: $main-blue;
+$Yikes:'Yikes';
+$AllerBold:'AllerBold';
+$stampFont:'Stamaj';
+
+// Bootstrap
+$grid-float-breakpoint: 991px;
+
+$body-bg: white;
+$font-size-base: 14px;
+$font-family-sans-serif: Arial;
+$text-color: #274646;
+$brand-danger: #d9534f;
+
+$btn-default-bg: $green; 
+$btn-default-border: #687543;
+$btn-default-color: #fff;
+
+$btn-primary-border: darken(darken(#428bca, 6.5%), 20%);
+
+$modal-content-bg: $main-blue;
+$modal-footer-border-color: transparent;
+$modal-header-border-color: transparent;
+$modal-content-fallback-border-color: transparent;
+$modal-inner-padding: 15px 45px;
+
+$input-bg: #d8edf0;
+$input-color: $text-color;
+$input-border-radius: 0;
+$input-height-base: 44px;
+
+$pagination-color: #fff;
+$pagination-bg: transparent;
+$pagination-hover-color: $text-color;
+$pagination-hover-bg: transparent;
+$pagination-active-color: $text-color;
+$pagination-active-bg: transparent;
+$pagination-disabled-bg: transparent;
+
+$link-color: #fff;
+$link-hover-color: $text-color;
+
+// Misc
+$concours-text-color: $text-color;
+
+// Heights
+$header-nav-height: 110px;
+$footer-nav-height: 50px;
+$subnav-height: 95px;
+
+// Spriting
+$balloons-layout:smart;
+$sprites-layout:smart;
+
+// Thumbnail
+$tmb-lg-border-width: 17px;
+$tmb-border-width: 12px;
+$tmb-md-border-width: 7px;
+$tmb-sm-border-width: 5px;

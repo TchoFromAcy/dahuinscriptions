@@ -1,0 +1,40 @@
+<?php
+echo $this->docType();
+$layout = $this->layout();
+$view = $layout->getView();
+
+
+?>
+
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+ <?php echo $this->headTitle() ?>
+    <?php echo $this->headMeta() ?>
+    <?php echo $this->headLink() ?>
+
+    <?php echo $this->headScript() ?>
+
+</head>
+<body>
+
+
+<nav class="navbar navbar-default" role="navigation">
+      <div class="container-fluid">
+        
+          <a class="navbar-brand" href="http://www.dahultimate.com">Dahultimate</a>
+          <?php  if($view->isConnected):?>
+          
+          <a  class="navbar-right"href="/admin?logout=1">D&eacute;connexion</a>
+          
+          <?php  endif;?>
+          
+        </div>
+        
+
+    </nav>
+<div class="container-fluid">
+<?php echo $this->layout()->content; ?>
+</div>
+</body>
+</html>

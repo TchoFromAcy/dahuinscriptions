@@ -1,0 +1,704 @@
+<h1>Administration du tournoi</h1>
+<div class="container">
+
+
+<form><?php  if(count($this->saisonList)>1):?>
+		<div class="form-group col-md-4">
+			<label class="control-label" for="saisonList">Choisir la saison :</label>
+			<select id="saisonList" name="saisonList" class="form-control">
+<?php  foreach($this->saisonList as $saison):?>
+
+<option value="<?php  echo $saison?>"
+					<?php  if($saison == $this->currentSeason):?> selected="selected"
+					<?php  endif;?>>Saison <?php echo $saison?></option>
+
+<?php  endforeach;?>
+
+</select>
+		</div><?php  endif;?>
+		<div class="form-group col-lg-5" id="actionDiv">
+			
+		<span
+				class="badge" id="numSelect">0</span>	
+			<div class="btn-group" role="group" >
+			
+				<button type="button" class="btn btn-default disabled">
+					<em class="fa fa-check"></em> Valider la s&eacute;lection
+				</button>
+				<button type="button" class="btn btn-default disabled" id="exportSelect">
+					<em class="fa fa-file-zip-o"></em> Exporter la s&eacute;lection
+				</button>
+			</div>
+		</div>
+
+	</form>
+
+	<script>
+
+	var PRIX_JOUEUR=<?php  echo PRIX_JOUEUR?>, PRIX_NONJOUEUR=<?php  echo PRIX_NONJOUEUR?>, PRIX_ENFANT=<?php  echo PRIX_ENFANT?>;
+
+$(document).ready(function(){
+
+
+	$('#saisonList').bind('change', function(e){
+return;
+
+		$('#demo_grid1').bs_grid('getAllOptions').ajaxFetchDataURL="/admin/ajax?format=json&apiCall=getInscriptions&currentSaison="+$(this).val();
+		$("#demo_grid1").hide();
+		$("#demo_grid1").bs_grid('displayGrid', true);
+
+		});
+	
+});
+
+</script>
+
+
+</div>
+<div id="demo_grid1" style="display: none"></div>
+
+
+
+<script>
+var currentSaison='<?php  echo $this->currentSeason?>';
+
+function displaySelection(){
+
+				var num = $( 'input[name="selectInscription[]"]:checked' ).length;
+				
+				$('#numSelect').html(num);
+
+				if(num)$('#actionDiv .btn').removeClass('disabled');
+				else $('#actionDiv .btn').addClass('disabled');
+				
+
+				
+	
+}
+
+function exportSelection(){
+	var checked = $( 'input[name="selectInscription[]"]:checked' );
+
+	if(checked==0) return;
+var params=["apiCall=exportLicences", "format=json"];
+	
+
+	$.each(checked, function(index, input){
+
+		params.push('inscr[]='+$(input).val());
+		
+
+		});
+
+
+	var url='/admin/ajax?'+params.join('&');
+
+	window.open(url);
+
+	
+	
+	
+}
+
+
+
+$(document).ready(function(){
+
+
+	
+	moment.locale('fr');
+
+$('#exportSelect').bind('click',exportSelection);
+	
+
+	 $("#demo_grid1").bs_grid({
+
+		 useSortableLists:false,
+		
+		 onRowClick:function(event, data){
+
+		var cb = $('input[value="'+data.row_id+'"]');
+	
+		
+		$(cb).prop('checked', data.row_status=='selected').change();
+
+if(!$(cb)||!$(cb).is(':checked')) return $(this).bs_grid('selectedRows', 'mark_deselected', data.row_id);
+
+		
+			 },
+		 
+		 onDisplay: function() {
+			 $('#tools_demo_grid1 .btn-group').not(':first-child').remove();
+
+			 $('#pag_demo_grid1 ul, #pag_demo_grid1 .input-group').remove();
+
+			 $('#actionDiv').addClass('pull-left').insertBefore($('#tools_demo_grid1 .btn-group'));
+
+
+$('.edit-profil').bind('click', editProfil);
+				
+		$(this).show();
+
+			  var me =$(this);
+	  
+$('#selectAllInsc').bind('change',function(e){
+
+checked=$(this).is(':checked');
+$( 'input[name="selectInscription[]"]' ).prop('checked', checked);
+
+$.each($( 'input[name="selectInscription[]"]' ), function(index, cb){
+
+	if(!cb)
+		return;
+
+	if(checked) me.bs_grid('selectedRows', 'mark_selected', $(cb).attr('value'));
+	else me.bs_grid('selectedRows', 'mark_deselected', $(cb).attr('value'));
+
+	
+});//;
+
+
+displaySelection();
+	
+return;
+	
+});
+
+var arrayPoste=["Handler","Middle","Deep"]
+
+$( 'input[name="selectInscription[]"]' ).bind('change',displaySelection);
+		
+			  },
+	rowSelectionMode:'multiple',
+	rowsPerPage: 100,
+	
+	        ajaxFetchDataURL: "/index/ajax?format=json&apiCall=getTournoiInscriptions",
+	        row_primary_key: "id_inscription",
+	        useFilters:false,
+	        columns: [
+		                  {field: null,type:'action', header: '<input type="checkbox" id="selectAllInsc" value="ok" />', renderer:function(v, record){
+
+								if(!record) return'';
+							return '<input type="checkbox" name="selectInscription[]" value="'+record.id_inscription+'" />';
+								
+
+			                  }},	
+
+			                  			  	            
+	            {field: "nom", header: "Nom"},
+	            {field: "prenom", header: "Pr&eacute;nom"},
+	            {field: "email", header: "Email"},
+	            {field: "type", header: "Type", renderer:function(v){
+						return parseInt(v)==1?"Joueur":"Accompagnant";
+		            }},
+	            {field: "club", header: "Club", visible: "no"},
+	         	            {field: "dob", header: "Date de naissance", visible: "no",renderer:function(v){
+	return moment(v).format('DD/MM/YYYY');
+
+		            }},
+			{field: "sexe", header: "Sexe", renderer:function(value, record){
+
+					gender=value==2?'male':'female';
+	            	return '<em class="fa fa-'+gender+' fa-3x"></em>';
+	            					
+	            			            }},
+
+{field:"poste", header:"Handler",renderer: displayPoste, index:0},
+{field:"poste", header:"Middle",renderer: displayPoste, index:1},
+{field:"poste", header:"Deep",renderer: displayPoste, index:2},
+{field:"technique", header:"Tech."},
+{field:"physique", header:"Phy."},
+	     {field:"adulte", header:"Accompagn&eacute;",visible:"no", renderer:function(v, record){
+	    	 
+		     if(!record) return;
+				     
+			var adulte =parseInt(record.adulte), enfant=parseInt(record.enfant);
+		     if(adulte+enfant==0) return "-";
+
+		     text=[];
+
+		     if(adulte>0)text.push("<li>"+adulte+" adulte"+(adulte>1?"s":"")+"</li>"); 
+		     if(enfant>0)text.push("<li>"+enfant+" enfant"+(enfant>1?"s":"")+"</li>");
+
+				return "<ul>"+text.join('')+'</ul>';
+		     }},
+		     {field:"party", header:"Welcome", visible:"no",renderer:renderResponse},
+		     {field:"comment", header:"Commentaires", visible:"no"},
+		     {field:"playlist", header:"Playlist", visible:"no"},
+		     {header:"Montant", renderer:function(v, record){
+			     if(!record) return;
+				var adulte =parseInt(record.adulte), enfant=parseInt(record.enfant);
+				var prix=(parseInt(record.type)==1?PRIX_JOUEUR:PRIX_NONJOUEUR)+adulte*PRIX_NONJOUEUR+enfant*PRIX_ENFANT;
+				return prix+' &euro;';
+				}},
+
+			     			    {header:'A confirm&eacute;',field:"confirm", renderer:renderResponse
+
+			     				     			     },
+			     				     			     {field:"payed", header:"Pay&eacute;", renderer:function(v, record){
+
+
+				     				     			     
+													return parseInt(v)==1?'<em class="fa fa-check"></a>':'';
+
+				     				     			     }
+			     				     			     },
+			     				     			   { header:"",type:"action", renderer:function(v, record){
+
+									if(!record) return;
+			     				     				   
+																		return "<em class=\"fa fa-pencil edit-profil\" data-id=\""+record.id_inscription+"\"></em>"; 
+
+														
+					     				     			     }
+				     				     			     }	          
+			        	          
+		        
+	        ],
+	 
+	        sorting: [
+	         
+//{sortingName: "Date d'enregistrement", field: "creation_date", order: "descending"},
+	            {sortingName: "Nom", field: "nom", order: "ascending"},
+	            {sortingName: "Pr&eacute;nom", field: "prenom", order: "ascending"}
+	            	            
+	        ]
+
+	      
+
+
+
+	
+});
+});
+
+function renderResponse(v, record){
+	 
+     if(!record) return;
+var html="";		
+
+     
+
+switch(parseInt(v)){
+
+case 1:
+
+
+css='check';
+
+
+break;
+
+case 2:
+
+css='times';
+
+
+break;
+
+default :
+
+css='question';
+
+break;
+
+
+}
+
+
+
+	return '<em class="fa fa-'+css+' "></em>';
+
+}
+function displayPoste(v, record){
+
+	if(!record) return;
+	postes=v.split(',');
+	if(postes.length==0) return;
+
+	return $.inArray((this.index+1).toString(), postes)>-1?'<em class="fa fa-check"></em>':'';
+	
+	
+
+	
+}
+
+
+
+function editProfil(e){
+
+	e.preventDefault();
+	var grid= $("#demo_grid1"),id=$(this).data('id'),record = grid.bs_grid('getRecord',id), cols=$("#demo_grid1").bs_grid('getOption','columns');
+
+
+
+	$('#detailForm').empty();
+	
+	$.each(cols, function(index, col){
+
+		if(col.type=="action"||col.field=="nom"||col.field=="prenom") return;
+
+raw=(col.field=="comment"||col.field=="party"||col.field=="regime"||col.field=="payed");
+
+
+
+		var field=col.header,value=grid.bs_grid('getCellValue',id, index, raw), value=value==null?'-':value;
+
+try{value=value.replace(/fa-[0-9]x/,'');}catch(e){};
+		
+		if(col.field=="payed"){
+			switch(parseInt(value)){
+				default:
+				value='<em class="fa fa-square-o payedlink" style="font-size:20px"></em>';
+				$('#modalDetail .btn-primary').show();
+
+
+				
+				break;
+				case 1:
+				value='<em class="fa fa-check-square-o payedlink" style="font-size:20px""></em>';
+				
+				break;
+			}
+			} 
+
+		$('<div class="col-md-6"><strong>'+field+' : </strong> '+value+'</div>').appendTo($('#detailForm'));
+		
+
+
+		
+		});
+	
+	$('<div class="clearfix"></div>').appendTo($('#detailForm'));
+
+	
+$('#modalDetail h4').html('<span class="pull-left">'+record.prenom+' '+record.nom+'</span><a class="pull-right fa fa-envelope" style="margin-right:20px" href="mailto:'+record.email+'"></a><div class="clearfix"></div>');
+$('#modalDetail').modal().data('record',record).data('initialpayed',isNaN(parseInt(record.payed))?0:parseInt(record.payed));
+
+$('.payedlink').bind('click', validatePaiement);
+
+//
+	return;
+	$("#demo_grid1").bs_grid('updateRow',$(this).data('id'));
+	
+}
+
+
+function validatePaiement(e){
+
+if($(this).hasClass('fa-square-o')){
+	$(this).removeClass('fa-square-o').addClass('fa-check-square-o');
+	$('#modalDetail').data('record').payed=1;
+	
+}
+else{
+$('#modalDetail').data('record').payed=0;
+
+$(this).addClass('fa-square-o').removeClass('fa-check-square-o');
+
+}
+
+if($('#modalDetail').data('record').payed==$('#modalDetail').data('initialpayed'))$('#modalDetail .btn-primary').attr("disabled","disabled");
+else $('#modalDetail .btn-primary').removeAttr("disabled");
+	
+}
+
+$(document).ready(function(){
+
+	$('#modalDetail .btn-primary').bind('click', updatePaiement);
+
+	
+});
+
+
+
+function updatePaiement(e){
+	var grid= $("#demo_grid1"),record=$('#modalDetail').data('record');
+	grid.bs_grid('setRecord',record.id_inscription, record);
+	
+
+record.apiCall="updateInscription"; 
+
+	
+	$.ajax({url:'/admin/ajax?format=json',method:'post', data:record, complete:function(response){
+
+
+	var response=response.responseJSON,type=!response.success?'error':'success', title=!response.success?'Arf':'Yeh';
+
+	new PNotify({
+	    title: title,
+	    text: response.msg,
+	    type: type,
+	    delay: 3000
+	});
+
+	grid.bs_grid('updateRow',record.id_inscription);	
+		
+
+
+
+		}});
+
+	$('#modalDetail').modal('hide');
+
+	
+}
+
+</script>
+
+<style>
+
+#demo_grid1 th {
+	font-size: 12px;
+}
+	
+	tbody td, th{text-align:center;}
+
+</style>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modalDetail">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Modal title</h4>
+      </div>
+      <div class="modal-body">
+      <form id="detailForm">
+
+
+
+</form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+        <button type="button" class="btn btn-primary" disabled="disabled">Sauvegarder</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+<form class="form" style="display:none">
+	<fieldset class="col-md-6">
+	<div class="form-group col-md-12">
+	<label for="nom">Nom</label>
+	<div class="input-group">
+	<input type="text" name="nom" id="nom" class="form-control" />
+	</div>
+	</div>
+	
+	<div class="form-group col-md-12">
+	
+	<label for="prenom">Pr&eacute;nom</label>
+	
+	<div class="input-group">
+	<input type="text" name="prenom" id="prenom" class="form-control" />
+	</div>
+	</div>
+	<div class="form-group col-md-12">
+	
+	<label for="email">Email</label>
+	
+	<div class="input-group">
+	<input type="text" name="email" id="email" class="form-control" />
+	</div>
+	
+	</div>
+	
+	<div class="form-group col-md-12">
+	
+	<label for="dob">Date de naissance</label>
+	
+	<div class="input-group">
+	<input name="dob" id="dob" class="form-control" placeholder="01/12/1990" />
+
+	</div>
+	
+	</div>
+	
+	<div class="form-group col-md-12">
+	
+	<label for="sexe">Sexe</label>
+	
+	<div class="input-group">
+	<select name="sexe" id="sexe" class="form-control">
+	<option value="1">Je suis une femme</option>
+	<option value="2">Je suis un homme</option>
+	</select>
+
+	</div>
+	
+	</div>
+	
+	
+<div class="form-group col-md-12">
+	<label for="type">Vient en tant que :</label>
+	<div class="input-group">
+	<select name="type" id="type" class="form-control">
+	<option value="1">Joueur</option>
+	<option value="2">Invit&eacute</option>
+	</select>
+
+	</div>
+	
+	</div>
+	
+	
+	<div class="checkbox col-md-12">
+	
+	<label><span for="accompagne">Vient accompagn&eacute; </span><input type="checkbox" name="accompagne" id="accompagne" value="1" /> </label>
+	<div class="clearfix"></div>
+	
+		
+	</div>
+	
+	<div id="companionDiv" style="display:none">
+	<div class="form-group col-md-6">
+	<label for="adulte">Nb d'adulte(s) :</label>
+	<div class="input-group">
+	<input type="number" name="adulte" id="adulte" min="0"  value="0" class="form-control" />
+	</div>
+	
+	</div>
+	
+	
+	<div class="form-group col-md-6">
+	<label for="enfant">Nb d'enfant(s) :</label>
+	<div class="input-group">
+	<input type="number" name="enfant" id="enfant" min="0" value="0" class="form-control" />
+	</div>
+	
+	</div>
+	</div>
+	<div class="form-group">
+		<label for="comment">Commentaire</label>
+	
+	<div class="input-group">
+	<textarea id="comment" name="comment" class="form-control"></textarea>
+	</div>
+	
+	</div>
+	
+	<div class="clearfix"></div>
+	</fieldset>
+	
+	<fieldset class="col-md-6" id="compFs">
+		
+	<div class="form-group col-md-12">
+	
+	<label for="club">Club</label>
+	
+	<div class="input-group">
+	<input name="club" id="club" class="form-control" />
+	</div>
+		
+		<div class="checkbox">
+</div>
+		
+	</div>
+	
+	<div class="form-group col-md-12">
+	<label for="poste1" class="cbLabel">Postes</label>
+	<div class="clearfix"></div>
+	<label class="checkbox-inline">
+  <input type="checkbox" id="poste1" name="poste[]" value="1"> Handler
+</label>
+<label class="checkbox-inline">
+  <input type="checkbox" id="poste2" name="poste[]" value="2"> Middle
+</label>
+<label class="checkbox-inline">
+  <input type="checkbox" name="poste[]" id="poste3" value="3"> Deep
+</label>
+	<p class="help-block" data-for="poste">&nbsp;</p>
+	
+	</div>
+	
+	<div class="form-group slider-group col-md-12">
+	
+	
+	
+	
+	<label for="technique">Niveau technique <span class="help-text">(technique pure et tactique)</span></label>
+	
+	<div class="input-group text-center">
+	
+	<input id="technique" name="technique" class="slider form-control" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="10" data-slider-step="1" data-slider-value="0"  />
+	
+	</div>
+	</div>
+	
+	
+	<div class="form-group slider-group col-md-12">
+	<label for="physique">Niveau physique</label>
+	<div class="input-group text-center">
+	<input id="physique" name="physique" class="slider form-control" data-slider-id='ex2Slider' type="text" data-slider-min="0" data-slider-max="10" data-slider-step="1" data-slider-value="0" style="width:100%" />
+	</div>
+	</div>
+	
+	
+		<div class="clearfix"></div>
+	<h3>
+	
+	Informations compl&eacute;mentaires
+	Additional information
+	
+	</h3>
+	
+	<div class="form-group col-md-12">
+	
+	<label for="party">Sera pr&eacute;sent &agrave; la welcome party 	:</label>
+	<div class="input-group">
+	<select name="party" id="party" class="form-control">
+	<option value="1">Oui</option>
+	<option value="2">Non</option>
+	<option value="3">NSP</option>
+	</select>
+
+	</div>
+	
+	</div>
+	
+	
+	<div class="form-group col-md-12">
+	<label for="regime">R&eacute;gime sp&eacute;cial :</label>
+	<div class="input-group">
+	<textarea name="regime" id="regime" class="form-control"></textarea>
+
+	</div>
+	
+	</div>
+	
+	
+	<div class="form-group col-md-12">
+	<label for="playlist">Playlist
+	
+	:</label>
+	<div class="input-group">
+	<textarea name="playlist" id="playlist" class="form-control"></textarea>
+
+	</div>
+	
+	</div>
+	
+	</fieldset>
+	<div class="clearfix"></div>
+	<div class="text-center col-md-6">
+	
+		<button class="btn btn-primary" type="submit">Mettre &agrave; jour</button> <button class="btn btn-default" type="submit">Fermer</button>
+	</div>
+		<div class="clearfix"></div>
+		
+		
+		
+	</form>
+
+<style>
+
+.payedlink{
+cursor:pointer;
+}
+
+</style>

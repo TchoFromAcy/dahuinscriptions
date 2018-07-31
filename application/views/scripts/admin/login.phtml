@@ -1,0 +1,30 @@
+<?php
+
+?>
+
+<div class="container" style="height:90vh; position:relative;">
+
+<form class="col-md-6 col-md-offset-3 form-inline" style="position:relative; top:50%; transform:translateY(-50%);" method="post" action="/login">
+<fieldset>
+<legend>Connexion &agrave; l'administration</legend>
+<?php  if(!empty($this->error)):?>
+
+<div class="alert alert-danger" role="alert"><?php  echo $this->error?></div>
+
+<?php  endif;?>
+<div class="form-group">
+<label for="mdp">Mot de passe</label>
+<div class="input-group">
+<input type="password" name="mdp" id="mdp" class="form-control" /><span class="input-group-addon" style="padding:0"><button type="submit" class="pull-right" style="border:none; background:transparent; width:100%;padding:6px 12px;"><em class="fa fa-lock"></em></button></span>
+</div>
+
+
+
+</div>
+
+</fieldset>
+
+</form>
+
+
+</div>

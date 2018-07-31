@@ -1,0 +1,10 @@
+nbproject
+node_modules
+vendor
+.idea
+bower_components
+cgi-bin
+dahuinscriptions
+2017
+zip
+captcha

@@ -1,0 +1,161 @@
+<div id="listeModal" class="modal container fade" tabindex="-1">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><em class="fa fa-times"></em>
+        </button>
+
+    </div>
+    <div class="modal-body">
+        <div class="row-fluid">
+
+            <section id="listjoueur">
+
+
+                <?php
+
+                $all = $this->all;
+
+                $joueurListe = [1 => [], 2 => []];
+
+                $mapper=new Default_Model_TournoiMapper();
+
+                $waitingList = $mapper->execQuery("select * from tournoi where confirm=4 order by update_date ASC",[]);
+
+                foreach ($all as $joueur):
+                    if ($joueur->email !== "chau@plusdeclic.comss" && (int)$joueur->confirm !== 2) array_push($joueurListe[$joueur->sexe], $joueur);
+
+
+                endforeach;
+
+                $joueurListe = array_reverse($joueurListe, true);
+
+                if(!$this->mobile):
+
+                ?>
+                <ul class="nav nav-tabs" role="tablist" style="border-bottom: none">
+                    <li role="presentation" class="active"><a href="#joueurs" aria-controls="home" role="tab"
+                                                              data-toggle="tab"><span class="sav fr">Joueurs </span>
+                            <span class="uk" style="display:none">Males</span>
+                            <span style="" class="badge"><?php echo count($joueurListe[2]) ?></span></a></li>
+                    <li role="presentation" class=""><a href="#joueuses" aria-controls="home" role="tab"
+                                                              data-toggle="tab"><span class="sav fr">Joueuses </span>
+                            <span class="uk" style="display:none">Females</span>
+                            <span style="" class="badge"><?php echo count($joueurListe[1]) ?></span></a></li>
+                    <?php if(count($waitingList)>0) :?>
+                        <li role="presentation" class=""><a href="#waitingList" aria-controls="home" role="tab"
+                                                            data-toggle="tab"><span class="sav fr">Liste d'attente </span>
+                                <span class="uk" style="display:none">Waiting list</span>
+                                <span style="" class="badge"><?php echo count($waitingList) ?></span></a></li>
+                    <?php endif ?>
+
+                </ul>
+<?php else : ?>
+<select id="chooseList" class="form-control">
+    <option value="joueurs" class="sav fr">Joueurs - <?php echo count($joueurListe[2]) ?></option>
+    <option value="joueuses" class="sav fr">Joueuses - <?php echo count($joueurListe[1]) ?></option>
+    <option value="joueurs" class="uk" style="display: none">Males -  <?php echo count($joueurListe[2]) ?></option>
+    <option value="joueuses" class="uk" style="display: none">Females - <?php echo count($joueurListe[1]) ?></option>
+    <?php if(count($waitingList)>0) :?>
+
+        <option value="waitingList" class="sav fr">Liste d'attente - <?php echo count($waitingList) ?></option>
+        <option value="waitingList" class="uk" style="display: none">Waiting list -  <?php echo count($waitingList) ?></option>
+
+    <?php endif ?>
+
+</select>
+<script>
+    $('#chooseList').bind('change', function(){
+        $('.tab-pane.active').removeClass('active');
+        $('#'+$(this).val()).addClass('active');
+
+    })
+</script>
+
+                <?php endif; ?>
+                <div class="tab-content">
+                <?php
+
+                foreach ($joueurListe as $key => $liste):
+
+
+                    ?>
+                    <div role="tabpanel" class="tab-pane <?php if($key==2) echo "active"?>" id="<?php echo ($key==2?"joueurs":"joueuses") ?>">
+                    <ul class="list-group col-md-12">
+
+
+                        <?php foreach ($liste as $joueur): ?>
+
+                            <li class="list-group-item col-md-6">
+                                <?php if ((int)$joueur->confirm == 1): ?><em
+                                        class="fa fa-check"></em> <?php endif; ?><?php if (!empty($joueur->club)): ?>
+                                    <span class="badge"><?php echo $joueur->club ?></span><?php endif; ?>
+                                <?php echo $joueur->prenom . " " . strtoupper($joueur->nom); ?>
+                            </li>
+
+                        <?php endforeach; ?>
+                    </ul>
+                        <div class="clearfix"></div>
+                    </div>
+
+                <?php endforeach; ?>
+
+                    <?php if(count($waitingList)>0) :?>
+
+                        <div role="tabpanel" class="tab-pane" id="waitingList">
+                            <ul class="list-group col-md-12">
+
+
+                                <?php foreach ($waitingList as $joueur): ?>
+
+                                    <li class="list-group-item col-md-6">
+                                        <?php if ((int)$joueur->confirm == 1): ?><em
+                                                class="fa fa-check"></em> <?php endif; ?><?php if (!empty($joueur->club)): ?>
+                                            <span class="badge"><?php echo $joueur->club ?></span><?php endif; ?>
+                                        <?php echo $joueur->prenom . " " . strtoupper($joueur->nom); ?>
+                                    </li>
+
+                                <?php endforeach; ?>
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+
+                    <?php endif ?>
+
+                </div>
+                <div class="clearfix"></div>
+
+            </section>
+
+
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" data-dismiss="modal" class="btn btn-primary"><span class="sav">Ferme z'y</span>
+
+            <span class="fr" style="display:none">Fermer</span>
+            <span class="uk" style="display:none">Close</span>
+
+        </button>
+
+    </div>
+</div>
+
+<style>
+
+    .tooltip{
+        z-index: 900;}
+
+    .nav-tabs > li > a{
+        color:rgba(0,0,0,0.6);
+
+    }
+
+    .mobile .modal-dialog{
+        overflow-y: initial !important
+    }
+    .mobile .modal-body{
+        max-height: calc(100vh - 200px) !important;
+        overflow-y: auto !important;
+    }
+    .mobile #listjoueur{padding:0}
+
+</style>

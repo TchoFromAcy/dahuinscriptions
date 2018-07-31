@@ -1,0 +1,13 @@
+<?php 
+
+if(!$this->captcha)$this->captcha = new Default_Controller_Helpers_Captcha();
+
+?>
+
+<?php if ($this->captcha): ?>
+
+        <?= $this->captcha->render($this) ?>
+        <a id="refreshCaptcha" class="pull-left" style="display:block;margin-top:10px"><i class="fa fa-refresh fa-2x" data-toggle="tooltip" title="Rafra&icirc;chir"></i></a>
+        <input type="hidden" value="<?php echo $this->captcha->getId()?>" name="captcha[id]" id="captchaId" />
+
+<?php endif; ?>

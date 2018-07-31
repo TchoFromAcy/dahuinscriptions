@@ -1,0 +1,136 @@
+@mixin bts-clearfix() {
+  &:before,
+  &:after {
+    content: " ";
+    display: table;
+    clear: both;
+  }
+}
+
+@mixin fa-icon($icon){
+	&:before{
+		font-family: 'FontAwesome';
+		content: $icon;
+	}
+}
+
+@mixin truncate ($width: 100%) {
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	width: $width;
+}
+
+@mixin placeholder ($global: true){
+	@if $global {
+		::-webkit-input-placeholder {
+			@content;
+		}
+		::-moz-placeholder {
+			@content;
+		}
+		
+		:-ms-input-placeholder {
+			@content;
+		}
+	}
+	@else {
+		&::-webkit-input-placeholder {
+			@content;
+		}
+		&::-moz-placeholder {
+			@content;
+		}
+		
+		&:-ms-input-placeholder {
+			@content;
+		}
+	}
+}
+
+@mixin galaxy-tab() {
+	@media screen and (max-width: 1024px) and (max-height: 600px) {
+		@content;
+	}
+}
+
+@mixin safari() {
+	@media only screen and (-webkit-min-device-pixel-ratio: 1) {
+     	::i-block-chrome, & {
+     		@content;
+     	}
+ 	}
+}
+
+
+@mixin hide-text () {
+	font: 0/0 a;
+	color: transparent;
+}
+
+@mixin gutter($width) {
+	padding-left: $width;
+	padding-right: $width;
+}
+
+@mixin replace-text($img, $withDimensions: false) {
+	color: rgba(0,0,0,0);
+	background: image-url($img) no-repeat 50% 50%;
+	
+	@if $withDimensions {
+		width: image-width($img);
+		height: image-height($img);
+	}
+}
+
+/** Copyright © 2011–2015 thoughtbot, inc. https://github.com/thoughtbot/bourbon/blob/master/LICENSE.md */
+$asset-pipeline: false !default;
+
+@function contains($list,$var) {
+    @return null != index($list, $var);
+}
+
+@function font-source-declaration($font-family,  $file-path,  $file-formats,  $font-url) {
+  $src: ();
+
+  $formats-map: (
+    eot:   "#{$file-path}.eot?#iefix" format("embedded-opentype"),
+    otf:   "#{$file-path}.otf"  format('opentype'),
+    woff2: "#{$file-path}.woff2" format("woff2"),
+    woff:  "#{$file-path}.woff" format("woff"),
+    ttf:   "#{$file-path}.ttf" format("truetype"),
+    svg:   "#{$file-path}.svg##{$font-family}" format("svg")
+  );
+
+  @each $key, $values in $formats-map {
+    @if contains($file-formats, $key) {
+      $file-path: nth($values, 1);
+      $font-format: nth($values, 2); 
+
+      $src: append($src, url($file-path) $font-format, comma);
+    }
+  }
+
+  @return $src;
+}
+
+@mixin font-face(
+  $font-family,
+  $file-path,
+  $weight: normal,
+  $style: normal,
+  $file-formats: eot woff ttf svg) {
+
+  @font-face {
+    font-family: $font-family;
+    font-style: $style;
+    font-weight: $weight;
+
+    src: font-source-declaration(
+      $font-family,
+      $file-path,
+      $file-formats,
+      url
+    );
+  }
+}

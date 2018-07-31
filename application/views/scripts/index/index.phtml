@@ -1,0 +1,1371 @@
+<?php
+$this->headLink ()->appendStylesheet ( '/_js/lib/dropzone/css/dropzone.css' )->appendStylesheet ( '//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css' )->appendStylesheet ( '/_js/lib/bootstrap-modal/css/bootstrap-modal.css' )->appendStylesheet ( '/_js/lib/bootstrap-modal/css/bootstrap-modal-bs3patch.css' )->appendStylesheet ( '/_js/pnotify.custom.min.css' );
+$this->headScript ()->appendFile ( '/_js/lib/bootstrap-modal/js/bootstrap-modal.js' )->appendFile ( '/_js/lib/bootstrap-modal/js/bootstrap-modalmanager.js' )->appendFile ( '/_js/lib/ajaxForm.js' )->appendFile ( '/_js/pnotify.custom.min.js' );
+
+
+
+?>
+
+<div class="container">
+	<h1>Dahultimate - Saison <?php  echo $this->currentSeason?></h1>
+	<h2><?php  if($this->userData&&!$this->inscriptionState=="renew") echo "Modification de ton "; else if($this->inscriptionState=="renew") echo "Renouvellement de ton ";?>Inscription</h2>
+	<p>
+		Bienvenue, futur(e) Dahu !!!<br /> Pour t'inscrire au club pour la
+		saison <?php  echo $this->currentSeason?>, merci de remplir le formulaire ci-joint.
+
+	</p>
+	
+	<?php  if(!$this->tokenExpired&&!$this->statusClosed):?>
+	
+	<form role="form" id="formInscription" class="col-lg-12 col-md-12"
+		action="#" enctype="multipart/form-data">
+
+		<div class="alert alert-danger" id="alreadyDiv" style="display: none"
+			role="alert">
+			<p>
+				Cette adresse email &agrave; d&eacute;j&agrave; &eacute;t&eacute;
+				utilis&eacute;e pour la saison en cours.<br />Si tu souhaites
+				modifier tes informations, clique sur le lien pr&eacute;sent dans le
+				mail de confirmation de l'enregistrement de ton inscription.
+			</p>
+			<p>
+				<a href="#" id="lostEmail" class="">Tu ne retrouves pas le mail ?
+					Clique ici pour le recevoir de nouveau (et pis regarde aussi dans
+					tes spams)</a>
+			</p>
+		</div>
+
+		<div class="col-lg-6">
+			<div class="form-group col-lg-12">
+				<label for="email">Adresse email *</label> <input type="email"
+					class="form-control required email" id="email" name="email"
+					placeholder="ultimate@frisbee.com"
+					value="<?php  echo $this->userData->email?>"
+					<?php  if($this->userData) :?> readonly="readonly" <?php  endif;?>>
+				<span class="help-block">Ton adresse mail sera utilis&eacute;e par
+					le club ou la f&eacute;d&eacute;ration pour t'envoyer des
+					informations relatives aux comp&eacute;titions.</span>
+			</div>
+
+			<div class="form-group col-lg-12">
+				<label for="Nom">Nom *</label> <input type="text"
+					class="form-control" id="nom" placeholder="" name="nom"
+					value="<?php  echo $this->userData->nom?>">
+			</div>
+
+
+			<div class="form-group col-lg-12">
+				<label for="prenom">Pr&eacute;nom *</label> <input type="text"
+					class="form-control" id="prenom" placeholder="" name="prenom"
+					value="<?php  echo $this->userData->prenom?>">
+			</div>
+
+			<div class="form-group col-lg-12">
+				<label for="tel">T&eacute;l&eacute;phone</label> <input type="text"
+					class="form-control" id="tel" name="tel"
+					placeholder="06/00/00/00/00"
+					value="<?php  echo $this->userData->tel?>">
+			</div>
+
+			<div class="form-group col-lg-12">
+
+				<label for="genre">Sexe *</label> <select class="form-control"
+					name="genre" id="genre">
+					<option value="">-----------------------</option>
+					<option value="2" <?php  if($this->userData->genre==2): ?>
+						selected="selected" <?php  endif;?>>Femme</option>
+
+					<option value="1" <?php  if($this->userData->genre==1): ?>
+						selected="selected" <?php  endif;?>>Homme</option>
+
+				</select>
+
+			</div>
+
+
+			<div class="form-group col-lg-12">
+				<label for="adresse">Adresse *</label> <input type="text"
+					class="form-control" id="adresse" placeholder="" name="adresse"
+					value="<?php  echo $this->userData->adresse?>">
+			</div>
+			<div class="form-group col-lg-12">
+				<label for="adresse2">Compl&eacute;ment d'adresse</label> <input
+					type="text" class="form-control" id="adresse2" placeholder=""
+					name="adresse2" value="<?php  echo $this->userData->adresse2?>">
+			</div>
+
+			<div class="form-group col-lg-4">
+				<label for="cp">Code Postal *</label> <input type="text"
+					class="form-control" id="cp" placeholder="74000" name="cp"
+					value="<?php  echo $this->userData->cp?>">
+			</div>
+
+			<div class="clearfix"></div>
+
+			<div class="form-group col-lg-12">
+				<label for="cp">Ville *</label> <input type="text"
+					class="form-control" id="ville" placeholder="" name="ville"
+					value="<?php  echo $this->userData->ville?>">
+			</div>
+
+
+			<div class="form-group col-lg-12">
+				<label for="dob">Date de naissance *</label> <input type="text"
+					class="form-control" id="dob" placeholder="jj/mm/yyyy" name="dob"
+					value="<?php  if(!empty($this->userData->dob)){$date = new Zend_Date($this->userData->dob); echo $date->get('dd/MM/yyyy');}?>">
+			</div>
+
+	<div class="form-group col-lg-12">
+				<label for="lieudob">Lieu de naissance *</label> <input type="text"
+					class="form-control" id="lieudob" name="lieudob"
+					value="<?php  echo $this->userData->lieudob;?>">
+			</div>
+			
+			<div class="form-group col-lg-12">
+				<label for="nationalite">Nationalit&eacute; *</label> <input type="text"
+					class="form-control" id="nationalite" name="nationalite"
+					value="<?php  echo $this->userData->nationalite;?>">
+			</div>
+			<div class="form-group col-lg-12">
+				<label for="profession">Profession </label> <input type="text"
+					class="form-control" id="profession" placeholder=""
+					name="profession" value="<?php  echo $this->userData->profession?>">
+			</div>
+
+
+			<div class="form-group col-lg-12">
+
+				<label for="licence">Type de licence *</label> <select
+					class="form-control" name="licence" id="licence">
+
+
+
+					<option value="">-----------------------</option>
+					
+					<?php
+		
+foreach ( $this->prix as $key => $value ) :
+			
+			if (is_int ( $key )) :
+				
+				?>
+					<option value="<?php  echo $key?>"
+						<?php  if($this->userData->licence==$key): ?> selected="selected"
+						<?php  endif;?> data-prix="<?php  echo $value["prix"]?>"><?php  echo $value["label"]?> (<?php  echo $value["prix"]?> &euro;)</option>
+					
+					
+			<?php  endif;
+		endforeach
+		;
+		?>
+					
+
+				</select> <input class="hidden" id="authKey" name="authKey"
+					value="<?php  if($this->userData)echo md5($this->userData->id_licence)?>" />
+			</div>
+
+			<div class="form-group col-lg-12 checkbox">
+				<label for="etudiant"> <input type="checkbox" name="etudiant"
+					data-prix="<?php  echo $this->prix['etudiant']; ?>"
+					<?php  if($this->userData->etudiant==1):?> checked="checked"
+					<? endif;?> id="etudiant" value="1"> Tarif &eacute;tudiant ( -<?php  echo $this->prix['etudiant']; ?>&euro;)
+				</label> <span class="help-block">Pour b&eacute;n&eacute;ficier du
+					tarif &eacute;tudiant, tu doit &ecirc;tre titulaire d'une carte
+					d'&eacute;tudiant pour l'ann&eacute;e en cours</span>
+			</div>
+
+			<div class="form-group col-lg-12">
+    Cotisation au club : <?php echo $this->prix['club']?> &euro;
+  </div>
+
+			<div class="form-group col-lg-12">
+				Montant de ta cotisation :
+					<strong id="totalPrix">
+						</strong>
+					
+				</div>
+			
+
+		</div>
+
+		<div class="col-lg-6">
+			<div>
+
+				<label for="certif">Certificat M&eacute;dical :</label>
+				<div class="dropZone dropzone" id="certifZone">
+					<div class="dz-default dz-message">
+						<em class="fa fa-file-pdf-o fa-5x"></em>
+					</div>
+
+				</div>
+				<div id="certifInfo" style="display: none">
+					<span class="fileInfo"></span>
+					<button class="btn btn-warning tip" type="button"
+						title="supprimer le fichier">
+						<em class="fa fa-trash"></em>
+					</button>
+					
+						<?php  if($this->userData&&$this->userData->certif):?>
+						
+						
+						<button class="btn btn-info tip" style="display: none"
+						type="button" title="restaurer le fichier original">
+						<em class="fa fa-refresh"></em>
+					</button>
+						
+						<?php endif;?>
+						<div class="clearfix"></div>
+				</div>
+
+				<div class="help-block">
+					<p class="help">Pour t&eacute;l&eacute;charger ton certificat, fait
+						un gliss&eacute;-d&eacute;pos&eacute; (ou drag&drop) ou clique sur
+						la zone ci-dessus</p>
+					<p>
+						<em class="fa fa-warning"></em> Attention, il doit y avoir
+						imp&eacute;rativement le n&deg; d'ordre du m&eacute;decin. <a
+							href="/medias/modele_certif.pdf">T&eacute;l&eacute;charge le
+							mod&egrave;le de certificat</a>
+					</p>
+						
+						<?php  if($this->userData&&$this->userData->certif):?>
+						
+						<p class="alert alert-info">
+						Si tu souhaites modifier ton certificat, s&eacute;lectionne un
+						nouveau fichier.<br />La modification ne sera effective que
+						lorsque tu auras valid&eacute; le formulaire
+					</p>
+						
+						<?php endif;?>
+						
+				</div>
+
+			</div>
+
+			<div>
+
+				<label for="identite">Ta photo d'identit&eacute; :</label>
+				<div class="dropZone dropzone" id="idZone">
+					<div class="dz-default dz-message">
+						<em class="fa fa-picture-o fa-5x"></em>
+					</div>
+
+
+				</div>
+				<div id="idInfo" style="display: none">
+					<div class="fileInfo"></div>
+
+
+
+					<button class="btn btn-warning tip pull-left" type="button"
+						title="supprimer la photo">
+						<em class="fa fa-trash"></em>
+					</button>
+					
+					<?php  if($this->userData&&$this->userData->photo):?>
+						
+						
+						<button class="btn btn-info tip pull-left" style="display: none"
+						type="button" title="restaurer le fichier original">
+						<em class="fa fa-refresh"></em>
+					</button>
+						
+						<?php endif;?>
+					<div class="clearfix"></div>
+
+				</div>
+				<div class="help-block">
+					<p class="help">Pour t&eacute;l&eacute;charger ta photo, fait un
+						gliss&eacute;-d&eacute;pos&eacute; (ou drag&amp;drop) ou clique
+						sur la zone ci-dessus</p>
+					<?php  if($this->userData&&$this->userData->photo):?>
+						
+						
+					
+					
+					<p class="alert alert-info">
+						Si tu souhaites modifier ta photo, s&eacute;lectionne un nouveau
+						fichier. <br />La modification ne sera effective que lorsque tu
+						auras valid&eacute; le formulaire
+					</p>
+					
+					
+					
+					
+					
+					
+						
+						<?php endif;?>
+					
+					
+					<p>
+
+
+
+
+
+						<em class="fa fa-warning"></em> Ta photo doit correspondre aux
+						crit&egrave;res suivants :
+					</p>
+
+
+
+					<table class="table">
+						<thead>
+							<tr>
+								<th><em class="fa fa-thumbs-o-up"></em> Good</th>
+								<th><em class="fa fa-thumbs-o-down"></em> Bad</th>
+							</tr>
+						</thead>
+						<tbody>
+
+							<tr>
+								<td>Photo en couleur (24 bits)</td>
+								<td>Photo en N&amp;B ou en nuances de gris (2-8 bits)</td>
+							</tr>
+
+							<tr>
+								<td>Prise de vue de face</td>
+								<td>Prise de vue de profil</td>
+							</tr>
+
+							<tr>
+								<td>Fond neutre</td>
+								<td>Fond noir ou fonc&eacute;</td>
+							</tr>
+
+							<tr>
+								<td>Cadrage centr&eacute; et au plus pr&egrave;s du visage</td>
+								<td>Cadrage d&eacute;centr&eacute; et au plus
+									&eacute;loign&eacute; du visage</td>
+							</tr>
+
+							<tr>
+								<td>Format JPEG ou PNG</td>
+								<td>Autres formats</td>
+							</tr>
+
+							<tr>
+								<td>R&eacute;solution de 72 ou 100 dpi</td>
+								<td>Autres r&eacute;solutions</td>
+							</tr>
+
+							<tr>
+								<td>Taille : 400x400 pixels</td>
+								<td>Autres tailles</td>
+							</tr>
+
+						</tbody>
+					</table>
+
+				</div>
+			</div>
+
+			<div class="form-group col-lg-12">
+				<label for="iban">Ton RIB (Code IBAN) *</label> <input type="text"
+					class="form-control" id="iban" name="iban"
+					value="<?php  echo $this->userData->iban;?>" />
+					<span class="help-block">Le club a besoin de ton RIB pour pouvoir effectuer les remboursements des d&eacute;placements en championnat par virement.</span>
+			</div>
+			
+			<div class="form-group col-md-12 no-paddingL">
+                
+               <div class="clearfix"></div>
+                <div class="input-group col-lg-5 pull-left">
+                
+                <label for="captcha[input]">Recopie le code *</label>   
+                    
+                     <input type="text" class="form-control" id="captcha[input]" name="captcha[input]" value="" maxlength="6" required>
+                </div>
+                  <div id="captcha-container" style="margin-top:15px; vertical-align:middle;">
+                 <?php  echo $this->partial('captcha.phtml');?>
+                 </div>
+                 <div class="clearfix"></div>
+                 <span class="help-block">C'est juste pour nous prouver que tu es un &ecirc;tre humain comme les autres. Si tu n'arrives pas &agrave; lire, il faudrait peut-&ecirc;tre aller chez l'ophtalmo</span>
+            </div>
+			
+			
+		</div>
+
+		<div class="clearfix"></div>
+		<div class="text-center">
+			<button type="submit" class="btn btn-primary"><?php  if($this->userData&&!$this->inscriptionState=="renew") echo "Modifier"; else if($this->inscriptionState=="renew") echo "Renouveller"; else echo "Valider"; ?> ton inscription</button>
+		</div>
+	</form>
+
+	<script>
+var emailCheck=0, updateStatus=<?php  echo $this->userData&&$this->inscriptionState!=="renew"?1:0?>;
+
+
+function sendEmailAgain(e){
+	e.preventDefault();
+
+	$.ajax({url:'/index/ajax?format=json',type:'post', data:{apiCall:'sendEmailAgain', email:$('#email').val()}, success:function (response){
+
+		if(!response.success) return new PNotify({
+		    title: 'Oh Non!',
+		    text: response.error,
+		    type: 'error',
+		    context:$('form')
+		});
+
+		return new PNotify({
+		    title: 'Ok !',
+		    text: 'Un email t\'a &eacute;t&eacute; adress&eacute; sur '+$('#email').val()+' avec le lien de modification',
+		    type: 'success',
+		    context:$('#formInscription')
+		});
+		
+
+		}});
+	
+
+	
+}
+
+$.validator.addMethod("dateFormat",
+	    function(value, element) {
+
+    
+	        return (value.match(/^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/));
+	        
+	    },
+	    "La date doit &ecirc;tre au format jj/mm/yyyy.");
+
+
+
+$('#formInscription').validate_popover({ popoverPosition: 'right', ignore:[],
+	showErrors: function(errorMap, errorList) {
+
+$('.fa.label').remove();
+		
+$.each($('.form-control.error'), function(index, input){
+
+	$(input).after('<em class="fa fa-warning label"></em>');
+	
+});
+
+$.each($('.form-control.valid'), function(index, input){
+
+	$(input).after('<em class="fa fa-check label"></em>');
+	
+});
+		   
+	    this.defaultShowErrors();
+	  },
+	rules:{
+		iban:{required:true, iban:true},
+		email:{required:true, email:true,
+			remote: {
+		        url: "/index/ajax?format=json",
+		        type: "post",
+		        data: {
+		          email: function() {
+		            return $( "#email" ).val();
+		          },
+		          apiCall:'checkMail',
+		          hash:function(){
+						return $('#authKey').val()
+			          }
+		        },
+		        complete:function(xhr,success,response){
+
+		        	emailCheck=1;
+
+		        	$('#lostEmail').unbind('click');
+		        	
+if(!xhr.responseJSON){
+emailCheck=-1;
+
+	$('#alreadyDiv').show();
+
+$('#lostEmail').bind('click',sendEmailAgain)
+		
+
+
+//$('#msg-modal').modal({backdrop:'static'});
+
+	
+}	else $('#alreadyDiv').hide();
+
+$('#email').valid();
+
+			        }
+		      }},
+		nom:{required:true},
+		prenom:{required:true},
+		genre:{required:true},
+		adresse:{required:true},
+		tel:{required:false,regex:/^0[67]([-\/. ]?[0-9]{2}){4}$/},
+		lieudob:{required:true},
+		nationalite:{required:true},
+		cp:{required: true,
+            minlength: 5,
+            maxlength: 5,
+            digits: true},
+            "captcha[input]":{
+
+                required:true,
+                minlength:6,
+                maxlength:6},
+		ville:{required:true},
+		dob:{required:true,dateFormat:true,dateITA:true},
+		licence:{required:true}
+		}, 
+		messages:{email:{email:'Adresse mail invalide'},tel:{regex:'Ton num&eacute;ro de t&eacute;l&eacute;phone est incorrect'}},
+		onkeyup: function(element) {
+            $(element).valid();
+        },
+
+        messages:{
+	email:{remote:'Cet email &agrave; d&eacute;j&agrave; &eacute;t&eacute; utilis&eacute;'}
+            },
+        
+        submitHandler:function(form){
+
+var contentAlert="", isMissing=false;
+
+
+if(dropZone1.files.length==0) {
+
+	contentAlert+=('<p>Tu as oubli&eacute; ton certif !</p>');
+	isMissing=true;
+} else if($('#certifZone').data('original')&&dropZone1.files[0]!==$('#certifZone').data('original')){
+
+	contentAlert+=('<p>Veux-tu VRAIMENT remplacer ton certificat m&eacute;dical ? </p>');
+}
+if(dropZone2.files.length==0) {
+	isMissing=true;
+	contentAlert+=('<p>Et ta photo, ou qu\'elle est ??!!</p>');
+}else if($('#idZone').data('original')&&dropZone2.files[0]!==$('#idZone').data('original')){
+	contentAlert+=('<p>Veux-tu VRAIMENT remplacer ta photo d\'identit&eacute; ? </p>');
+}
+
+var processFn=function(){var params = $(form).formSerialize();
+$('#ajax-modal').modal({backdrop:'static'});
+
+$.ajax({url:'/index/ajax?format=json',type:'post', data:params+'&apiCall=processInscription', success:processFiles});
+};
+
+if(contentAlert!==''){
+
+
+
+	$('#msg-modal .btn').unbind('click');
+
+	$('#msg-modal .modal-header strong').html('<em class="fa fa-warning"></em> Hey, attention !');
+	
+	$('#msg-modal .modal-body').html(contentAlert+(isMissing?'<p>Tu pourras toujours t&eacute;l&eacute;charger les documents manquants ult&eacute;rieurement</p>':'')+'<p>Souhaites-tu continuer ?</p>')
+	$('#msg-modal').modal({backdrop:'static'});
+
+
+	
+	$('#msg-modal .btn-default').bind('click', processFn);
+	return false;
+
+	
+}else processFn();
+
+
+
+        	
+
+        	
+
+            }
+       
+
+	});
+var isLoading=false;
+
+function processFiles(response){
+
+if(!response.success){
+
+
+	new PNotify({
+	    title: 'Oh Non!',
+	    text:response.error,
+	    type: 'error',
+	    context:$('form')
+	});
+
+	$('#refreshCaptcha').click();
+	$('input[name="captcha[input]"]').val(null)
+	$('#ajax-modal').modal('hide');
+	
+	return;
+}
+	
+	uploadFile(response.result,0);
+	
+	
+}
+
+
+function uploadFile(hash, index){
+
+index++;
+	
+	if(index==3) return uploadFinished(hash);
+
+	var fileUpload=eval('dropZone'+index);
+
+	
+	if(fileUpload.files.length==0||$(fileUpload.element).data('original')&&$(fileUpload.element).data('original')==fileUpload.files[0]&&updateStatus==1) return uploadFile(hash,index);
+
+	
+	currentFile = index==1 ? ' du certificat':' de la photo';
+
+div = index==1?$('#progressCertif'):$('#progressId');
+	
+	fileUpload.options.url+='&hash='+hash;
+
+	div.show();
+	isLoading=true;
+
+	if($(fileUpload.element).data('original')&&$(fileUpload.element).data('original')&&updateStatus==0){
+
+
+		$.ajax({url:'/index/ajax?format=json',type:'post', data:'apiCall=copyPhoto&hash='+hash+'&oldKey='+$('#authKey').val(), success:function(response){uploadFile(hash, index);}});
+
+
+
+		
+	}else{
+	
+	fileUpload.on('uploadprogress',function(e, progress){
+
+			if(progress<100) div.find('.progress-bar').css('width',parseInt(progress)+'%').find('span').html(parseInt(progress)+'%');
+			else {
+				div.find('.progress').hide();
+				div.find('em.fa').show();
+
+			}
+		
+
+	});
+
+	fileUpload.on('success',function(response){
+
+
+		uploadFile(hash, index)}); 
+	
+	
+	fileUpload.processQueue();
+	};
+	
+}
+
+function uploadFinished(hash){
+
+	$.ajax({url:'/index/ajax?format=json',type:'post', data:'apiCall=finalize&hash='+hash+'&update='+updateStatus, success:finalize});
+
+	
+}
+
+function finalize(response){
+	$('#ajax-modal').modal('hide');
+var typeLicence= parseInt($('#licence').val());
+
+var compte = response.prix;
+	
+	$('#formInscription').html('<div class="alert alert-success"><p><strong>Cool, ton inscription a bien &eacute;t&eacute; '+(updateStatus==1?'modifi&eacute;e':'prise en compte')+' !</strong><br />N\'oublie pas de t\'acquitter de la somme de '+compte+'&euro;.<br />Si tu souhaites faire un virement, <a href="/medias/rib.pdf">t&eacute;l&eacute;charge le RIB</a> du club.<br />Tu peux &eacute;galement payer par ch&egrave;que (&agrave; l\'ordre de l\'association Dahultimate)</p><p><a href="http://www.dahultimate.com" target="_blank">Retour sur dahultimate.com</a>.</p></div>');
+	
+}
+
+$.extend($.validator,{
+
+	 reset_position: function(popover, element) {
+		 
+         var left, left_adjust, offset, offset_adjust, position, top, top_adjust, _ref;
+         offset = $.validator.get_offset_element($(element).prev('label')).offset();
+         offset_adjust = $(element).data('popover-offset') || "0,0";
+         _ref = offset_adjust.split(','), top_adjust = _ref[0], left_adjust = _ref[1];
+         position = $.validator.get_position(element);
+
+         
+         if (position === 'top') {
+           top = offset.top -50 + parseInt(top_adjust);
+           left = offset.left + parseInt(left_adjust);
+         } else {
+           top = offset.top - 10 + parseInt(top_adjust);
+
+           
+           left =offset.left + $($(element).prev('label')).width() + 20 + parseInt(left_adjust);
+         }
+         return popover.css({
+           top: top,
+           left: left
+         });
+       }
+	
+});
+
+
+$.validator.addMethod(
+	    "regex",
+	    function(value, element, regexp) {
+	        var check = false;
+
+			if(value=="") return true;
+	        
+	        return this.optional(element) || regexp.test(value);
+	    },
+	    "Please check your input."
+	);
+
+
+var dropZone1, dropZone2;
+
+$(document).ready(function(){
+
+$('#licence, #etudiant').bind('change', calculCotisation);
+
+
+$('#refreshCaptcha').bind('click', refreshCaptcha);
+
+
+
+function refreshCaptcha(e) {
+
+	$('#refreshCaptcha').unbind('click', refreshCaptcha);
+	
+	$.get('/updater', {
+		tpl: 'captcha',
+	}).done(function(data) {
+		$('#captcha-container').html(data);
+		$('#captchaInput').val('');
+		$('#refreshCaptcha').bind('click', refreshCaptcha);
+	});
+
+	return false;
+}
+
+
+function calculCotisation(){
+
+
+	if(!$('#licence').valid()) return $('#totalPrix').html('');
+
+	var prix = $('#licence option[value='+$('#licence').val()+']').data('prix')-($('#etudiant').is(':checked')?$('#etudiant').data('prix'):0)+<?php  echo $this->prix["club"]?>;
+
+	$('#totalPrix').html(prix+' &euro;');
+	
+}
+
+$('.tip').tooltip();
+	
+<?php  if(!$this->arrayFiles||$this->arrayFiles&&!$this->arrayFiles['certif']):?>
+	
+$('#certifInfo .btn-warning').bind('click', function(e){
+e.preventDefault();
+
+$('#certifInfo').next('.help-block').find('p.help').show();
+$('#certifInfo').hide();
+$('#certifZone').show();
+$(this).tooltip('hide');
+
+});
+
+<?php  else :?>
+
+$('#certifInfo .btn-warning').bind('click', function(e){e.preventDefault();$(dropZone1.hiddenFileInput).click(); $(this).tooltip('hide');});
+
+<?php  endif;?>
+
+<?php  if(!$this->arrayFiles||$this->arrayFiles&&!$this->arrayFiles['photo']):?>
+$('#idInfo .btn-warning').bind('click', function(e){
+	e.preventDefault();
+
+	$('#idInfo').next('.help-block').find('p.help').show();
+	$('#idInfo').hide();
+	$('#idZone').show();
+	$(this).tooltip('hide');
+
+	});
+<?php  else :?>
+
+$('#idInfo .btn-warning').bind('click', function(e){e.preventDefault();$(dropZone2.hiddenFileInput).click();$(this).tooltip('hide');});
+
+<?php  endif;?>
+
+	$(document).on('dragenter', function (e) 
+			{
+			    e.stopPropagation();
+			    e.preventDefault();
+			});
+			$(document).on('dragover', function (e) 
+			{
+			  e.stopPropagation();
+			  e.preventDefault();
+			});
+			$(document).on('drop', function (e) 
+			{
+			    e.stopPropagation();
+			    e.preventDefault();
+			});
+	
+Dropzone.autoDiscover = false;
+
+var arrayFiles=<?php  echo json_encode($this->arrayFiles?$this->arrayFiles:[]);?>;
+
+dropZone1= new Dropzone('#certifZone',{url:'/index/ajax?format=json&apiCall=uploadFile&fileName=certif',
+
+	maxFilesize:1,
+	acceptedFiles:'.pdf',
+	maxFiles:1,
+	createImageThumbnails:false,
+	maxfilesexceeded:function(file){
+this.removeFile(file);
+		},
+		
+		
+	dictInvalidFileType:'seuls les fichiers au format pdf sont accept&eacute;s',
+	dictDefaultMessage:'Drag&drop un fichier ou clique ici',
+	autoQueue: true,
+	autoProcessQueue:false,
+	addedfile:function(file){
+
+		if($('#certifZone').data('original')&&$('#idInfo').data('original')!==file) $('#certifInfo .btn-info').show();
+		else $('#certifInfo .btn-info').hide();
+	
+		
+this.files=[file];
+			
+	$('#certifInfo').show();
+	$('#certifZone').hide();
+	$('#certifInfo .fileInfo').html("<strong>"+file.name+"</strong> ("+this.filesize(file.size)+")");
+
+	$('#certifInfo').next('.help-block').find('p.help').hide();
+	
+	
+		  },
+	  error:function(file, msg){
+
+
+		  this.removeAllFiles(true);
+		  $divAlert=$('<div class="alert alert-danger" id="alertCertif" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>'+msg+'</div>')
+		  $('#alertCertif').remove();
+		  
+	if($('#certifZone').data('original')){
+		addOriginaleDropZone1();
+
+		$('#certifInfo').next('.help-block').find('.alert-info').before($divAlert);
+
+		
+	}
+	else
+{
+		$divAlert.appendTo($('#certifZone'));
+		
+		 $('#certifInfo').hide();
+		  $('#certifZone').show();
+		  $('#certifInfo').next('.help-block').find('p.help').show();	
+		 
+}
+
+	 window.setTimeout(function() { $divAlert.alert('close'); }, 5000);
+
+		  }
+	   // Make sure the files aren't queued until manually added
+		
+	 
+	 
+
+	});
+
+
+if(arrayFiles["certif"]){
+function addOriginaleDropZone1(){
+
+	
+              dropZone1.emit("addedfile", arrayFiles["certif"]);
+           dropZone1.emit("complete", arrayFiles["certif"]);
+
+$('#certifZone').data('original',arrayFiles['certif']).data('modified',false);
+           var existingFileCount = 1; // The number of files already uploaded
+           dropZone1.files=[arrayFiles['certif']];
+           $('#certifInfo .btn-info').hide();
+           
+}
+
+addOriginaleDropZone1();
+$('#certifInfo .btn-info').bind('click',addOriginaleDropZone1);  
+
+}
+
+dropZone2= new Dropzone('#idZone',{url:'/index/ajax?format=json&apiCall=uploadFile&fileName=photo',
+
+	acceptedFiles:'.jpg, .jpeg, .png',
+	maxFiles:1,
+	createImageThumbnails:false,
+	maxfilesexceeded:function(file){
+this.removeFile(file);
+		},
+	dictInvalidFileType:'seuls les fichiers au format jpg, jpeg ou png sont accept&eacute;s',
+	dictDefaultMessage:'Drag&drop un fichier ou clique ici',
+	  autoQueue: true,
+	  autoProcessQueue:false,
+	  addedfile:function(file){
+		  this.files=[file];
+
+if($('#idZone').data('original')&&$('#idInfo').data('original')!==file) $('#idInfo .btn-info').show();
+else $('#idInfo .btn-info').hide();
+		  
+	$('#idInfo').show();
+	$('#idZone').hide();
+	$('#idInfo').next('.help-block').find('p.help').hide();
+	
+	if(file.type&&file.type.indexOf('image')>-1)this.createThumbnail(file);
+		  },
+
+		  thumbnail:function(file, thumb){
+			  if(file&&(file.height<400&&file.width<400)) return this.emit('error',file,'l\'image doit faire 400x400 pixels minimum'); 
+			  
+			  $('#idInfo .fileInfo').html('<img src="'+thumb+'" class="thumbnail" />');
+
+			  },
+	  error:function(file, msg){
+		  this.removeAllFiles(true);
+		  $divAlert=$('<div class="alert alert-danger" id="alertID" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>'+msg+'</div>')
+		  $('#alertID').remove();
+		  
+	if($('#idZone').data('original')){
+		addOriginaleDropZone2();
+
+		$('#idInfo').next('.help-block').find('.alert-info').before($divAlert);
+
+		
+	}
+	else
+{
+		$divAlert.appendTo($('#idZone'));
+		
+		 $('#idInfo').hide();
+		 $('#idZone').show();
+		 $('#idInfo').next('.help-block').find('p.help').show();
+		 
+}
+
+	 window.setTimeout(function() { $divAlert.alert('close'); }, 5000);
+	
+	
+		  }
+	   // Make sure the files aren't queued until manually added
+		
+	 
+	 
+
+	});
+
+
+if(arrayFiles["photo"]){
+
+function addOriginaleDropZone2(){
+	
+    dropZone2.emit("addedfile", arrayFiles["photo"]);
+
+ // And optionally show the thumbnail of the file:
+    dropZone2.emit("thumbnail", arrayFiles["photo"], arrayFiles["photo"].url);
+    
+ // Make sure that there is no progress bar, etc...
+ dropZone2.emit("complete", arrayFiles["photo"]);
+ $('#idZone').data('original',arrayFiles['photo']).data('modified',false);
+ // If you use the maxFiles option, make sure you adjust it to the
+ // correct amount:
+ dropZone2.files=[arrayFiles['photo']];
+ $('#idInfo .btn-info').hide();
+};
+
+addOriginaleDropZone2();
+$('#idInfo .btn-info').bind('click',addOriginaleDropZone2);
+
+}
+
+});
+
+/**
+ * IBAN is the international bank account number.
+ * It has a country - specific format, that is checked here too
+ */
+$.validator.addMethod("iban", function(value, element) {
+	// some quick simple tests to prevent needless work
+	if (this.optional(element)) {
+		return true;
+	}
+
+	// remove spaces and to upper case
+	var iban = value.replace(/ /g, "").toUpperCase(),
+		ibancheckdigits = "",
+		leadingZeroes = true,
+		cRest = "",
+		cOperator = "",
+		countrycode, ibancheck, charAt, cChar, bbanpattern, bbancountrypatterns, ibanregexp, i, p;
+
+	// check the country code and find the country specific format
+	countrycode = iban.substring(0, 2);
+	bbancountrypatterns = {
+		"AL": "\\d{8}[\\dA-Z]{16}",
+		"AD": "\\d{8}[\\dA-Z]{12}",
+		"AT": "\\d{16}",
+		"AZ": "[\\dA-Z]{4}\\d{20}",
+		"BE": "\\d{12}",
+		"BH": "[A-Z]{4}[\\dA-Z]{14}",
+		"BA": "\\d{16}",
+		"BR": "\\d{23}[A-Z][\\dA-Z]",
+		"BG": "[A-Z]{4}\\d{6}[\\dA-Z]{8}",
+		"CR": "\\d{17}",
+		"HR": "\\d{17}",
+		"CY": "\\d{8}[\\dA-Z]{16}",
+		"CZ": "\\d{20}",
+		"DK": "\\d{14}",
+		"DO": "[A-Z]{4}\\d{20}",
+		"EE": "\\d{16}",
+		"FO": "\\d{14}",
+		"FI": "\\d{14}",
+		"FR": "\\d{10}[\\dA-Z]{11}\\d{2}",
+		"GE": "[\\dA-Z]{2}\\d{16}",
+		"DE": "\\d{18}",
+		"GI": "[A-Z]{4}[\\dA-Z]{15}",
+		"GR": "\\d{7}[\\dA-Z]{16}",
+		"GL": "\\d{14}",
+		"GT": "[\\dA-Z]{4}[\\dA-Z]{20}",
+		"HU": "\\d{24}",
+		"IS": "\\d{22}",
+		"IE": "[\\dA-Z]{4}\\d{14}",
+		"IL": "\\d{19}",
+		"IT": "[A-Z]\\d{10}[\\dA-Z]{12}",
+		"KZ": "\\d{3}[\\dA-Z]{13}",
+		"KW": "[A-Z]{4}[\\dA-Z]{22}",
+		"LV": "[A-Z]{4}[\\dA-Z]{13}",
+		"LB": "\\d{4}[\\dA-Z]{20}",
+		"LI": "\\d{5}[\\dA-Z]{12}",
+		"LT": "\\d{16}",
+		"LU": "\\d{3}[\\dA-Z]{13}",
+		"MK": "\\d{3}[\\dA-Z]{10}\\d{2}",
+		"MT": "[A-Z]{4}\\d{5}[\\dA-Z]{18}",
+		"MR": "\\d{23}",
+		"MU": "[A-Z]{4}\\d{19}[A-Z]{3}",
+		"MC": "\\d{10}[\\dA-Z]{11}\\d{2}",
+		"MD": "[\\dA-Z]{2}\\d{18}",
+		"ME": "\\d{18}",
+		"NL": "[A-Z]{4}\\d{10}",
+		"NO": "\\d{11}",
+		"PK": "[\\dA-Z]{4}\\d{16}",
+		"PS": "[\\dA-Z]{4}\\d{21}",
+		"PL": "\\d{24}",
+		"PT": "\\d{21}",
+		"RO": "[A-Z]{4}[\\dA-Z]{16}",
+		"SM": "[A-Z]\\d{10}[\\dA-Z]{12}",
+		"SA": "\\d{2}[\\dA-Z]{18}",
+		"RS": "\\d{18}",
+		"SK": "\\d{20}",
+		"SI": "\\d{15}",
+		"ES": "\\d{20}",
+		"SE": "\\d{20}",
+		"CH": "\\d{5}[\\dA-Z]{12}",
+		"TN": "\\d{20}",
+		"TR": "\\d{5}[\\dA-Z]{17}",
+		"AE": "\\d{3}\\d{16}",
+		"GB": "[A-Z]{4}\\d{14}",
+		"VG": "[\\dA-Z]{4}\\d{16}"
+	};
+
+	bbanpattern = bbancountrypatterns[countrycode];
+	// As new countries will start using IBAN in the
+	// future, we only check if the countrycode is known.
+	// This prevents false negatives, while almost all
+	// false positives introduced by this, will be caught
+	// by the checksum validation below anyway.
+	// Strict checking should return FALSE for unknown
+	// countries.
+	if (typeof bbanpattern !== "undefined") {
+		ibanregexp = new RegExp("^[A-Z]{2}\\d{2}" + bbanpattern + "$", "");
+		if (!(ibanregexp.test(iban))) {
+			return false; // invalid country specific format
+		}
+	}
+
+	// now check the checksum, first convert to digits
+	ibancheck = iban.substring(4, iban.length) + iban.substring(0, 4);
+	for (i = 0; i < ibancheck.length; i++) {
+		charAt = ibancheck.charAt(i);
+		if (charAt !== "0") {
+			leadingZeroes = false;
+		}
+		if (!leadingZeroes) {
+			ibancheckdigits += "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".indexOf(charAt);
+		}
+	}
+
+	// calculate the result of: ibancheckdigits % 97
+	for (p = 0; p < ibancheckdigits.length; p++) {
+		cChar = ibancheckdigits.charAt(p);
+		cOperator = "" + cRest + "" + cChar;
+		cRest = cOperator % 97;
+	}
+	return cRest === 1;
+}, "IBAN incorrect");
+
+</script>
+	<?php  elseif($this->statusClosed):?>
+	
+	<div class="alert alert-warning">
+
+		Ton inscription a &eacute;t&eacute; valid&eacute;e.<br />Tu ne peux
+		plus la modifier !
+
+
+	</div> 
+	
+	
+	 <?php
+else :
+		function process_obfuscated_email($data) {
+			// obfuscate email address
+			$expl_email = explode ( "@", $data );
+			$email_name = $expl_email ['0'];
+			$length = strlen ( $email_name );
+			
+			if ($length >= 9) {
+				$first_3 = substr ( $email_name, 0, 3 );
+				$last_3 = substr ( $email_name, - 3 );
+				$obfuscated_email = $first_3 . "***" . $last_3 . "@" . $expl_email ['1'];
+			}
+			if ($length < 9) {
+				$av_sub = $length - 6;
+				if ($av_sub > 0) {
+					$first_3 = substr ( $email_name, 0, 3 );
+					$last = substr ( $email_name, - $av_sub );
+					$obfuscated_email = $first_3 . "***" . $last . "@" . $expl_email ['1'];
+				} elseif ($av_sub == 0) {
+					$first_3 = substr ( $email_name, 0, 2 );
+					$last = substr ( $email_name, - 2 );
+					$obfuscated_email = $first_3 . "***" . $last . "@" . $expl_email ['1'];
+				} else {
+					$first = substr ( $email_name, 0, 1 );
+					$last = substr ( $email_name, - 1 );
+					$obfuscated_email = $first . "***" . $last . "@" . $expl_email ['1'];
+				}
+			}
+			return $obfuscated_email;
+		}
+		
+		?>
+	
+	
+	<div class="alert alert-danger">
+
+		Le lien sur lequel tu as cliqu&eacute; a expir&eacute;.<br /> <a
+			href="#" id="sendNewEmail">Clique ici pour recevoir le nouveau lien. Il te sera envoy&eacute; sur <?php  $email= preg_replace('#(?<=.{3}).(?=.*@)#','*',$this->userData->email); echo $email;?></a>
+
+	</div>
+
+	<script>
+
+	$(document).ready(function(){
+
+		$('#sendNewEmail').bind('click',function(e){
+	e.preventDefault();
+
+
+	$.ajax({url:'/index/ajax?format=json',type:'post', data:{apiCall:'sendNewEmail', oldKey:'<?php  echo md5($this->userData->id_licence)?>'}, success:function (response){
+
+		if(!response.success) return new PNotify({
+		    title: 'Oh Non!',
+		    text: response.error,
+		    type: 'error',
+		    context:$('form')
+		});
+
+		return new PNotify({
+		    title: 'Ok !',
+		    text: 'Un email t\'a &eacute;t&eacute; adress&eacute; sur <?php  echo $email ?> avec le nouveau lien.',
+		    type: 'success',
+		    context:$('#formInscription')
+		});
+		
+
+		}});
+	
+	
+
+			});
+
+		
+
+		});
+
+	</script>
+	
+	<?php  endif;?>
+	
+</div>
+
+<style>
+.dropZone {
+	width: 100%;
+	height: 150px;
+	min-height: 150px;
+}
+
+.dropzone .dz-default.dz-message {
+	background: none;
+	color: black;
+	text-align: center;
+	line-height: 150px;
+}
+
+.dropzone .dz-default.dz-message>span {
+	display: block;
+}
+
+.dropZone .alert {
+	z-index: 9999;
+}
+
+.error-popover .popover-content {
+	font-size: 11px;
+	font-weight: bold;
+}
+
+.error-popover .popover-content {
+	padding: 5px 10px;
+}
+
+.error-popover.popover.right>.arrow {
+	border-width: 7px;
+	top: 18px;
+	left: -15px;
+}
+
+.error-popover.popover.right>.arrow:after {
+	border-width: 7px;
+	top: -7px;
+	left: -6px;
+}
+</style>
+
+
+<script>
+$.fn.modal.defaults.spinner = $.fn.modalmanager.defaults.spinner = 
+    '<div class="loading-spinner" style="width: auto; margin-left: -100px;">' +
+        '<div class="progress"><div class="progress-bar progress-bar-striped active" id="textLoad" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">' +
+           
+        'Un peu de patience</div></div>' +
+    '</div>';
+</script>
+
+<div id="msg-modal" class="modal fade" tabindex="-1"
+	style="display: none; margin-top: -161px;" aria-hidden="true">
+
+	<div class="modal-header">
+		<strong></strong>
+		<button type="button" class="close" data-dismiss="modal"
+			aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+
+	</div>
+
+	<div class="modal-body text-center"></div>
+
+	<div class="modal-footer text-center">
+		<button type="button" class="btn btn-primary" data-dismiss="modal">Non</button>
+		<button type="button" class="btn btn-default" data-dismiss="modal">Oui</button>
+
+	</div>
+
+</div>
+
+
+<div id="ajax-modal" class="modal fade" tabindex="-1"
+	style="display: none; margin-top: -161px;" aria-hidden="true">
+
+	<div class="modal-body text-center">
+
+		<strong><em class="fa fa-cog fa-spin"></em> Enregistrement de ton
+			inscription. Soit patient ...</strong>
+
+		<div id="progressCertif" style="display: none">
+			T&eacute;l&eacute;chargement du certificat <em class="fa fa-check"
+				style="display: none"></em>
+			<div class="progress">
+				<div class="progress-bar" role="progressbar" aria-valuenow="60"
+					aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+					<span class="">0%</span>
+				</div>
+			</div>
+		</div>
+
+		<div id="progressId" style="display: none">
+			T&eacute;l&eacute;chargement de la photo <em class="fa fa-check"
+				style="display: none"></em>
+			<div class="progress">
+
+
+				<div class="progress-bar" role="progressbar" aria-valuenow="60"
+					aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+					<span class="">0%</span>
+				</div>
+			</div>
+		</div>
+
+
+
+	</div>
+
+</div>
+
+<style>
+#idInfo {
+	position: relative;
+	width: auto;
+	height: auto;
+}
+
+#idInfo .btn,#certifInfo .btn,.fileInfo {
+	margin-right: 10px;
+	float: left;
+}
+
+.progress {
+	height: auto;
+}
+
+#textLoad {
+	padding: 2px 5px;
+}
+
+.form-control {
+	position: relative;
+}
+
+.fa.label {
+	position: absolute;
+	right: 16px;
+	top: 32px;
+	display: block !important;
+}
+
+.fa-warning.label {
+	color: red;
+}
+
+.form-group {
+	position: relative;
+}
+
+.fa-check.label {
+	color: green;
+}
+
+.popover {
+	z-index: 10;
+}
+
+.tooltip {
+	white-space: nowrap;
+}
+</style>

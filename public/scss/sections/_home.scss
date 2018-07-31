@@ -1,0 +1,392 @@
+body{
+  //background:rgba(#d3ebf0, 0.6);
+  
+  &.current{
+  background:linear-gradient(to bottom, rgba(29,59,93,0.3) 0%, rgba(255,255,255,1) 30%, rgba(255,255,255,1) 50%,rgba(29,59,93,0.6) 65%, rgba(29,59,93,1) 85%, rgba(22,22,22,1) 100%);
+ }
+ 
+ 
+ min-height:100vh;
+  
+  padding-top:50px;
+  
+  &.intro{
+    
+    background:linear-gradient(to bottom, rgba(29,59,93,0.3) 0%, rgba(255,255,255,1) 40%, rgba(255,255,255,1) 100%);
+    height:100vh;
+   // padding-top:0;
+    overflow:hidden;
+  }
+  &.wait{
+     overflow:hidden;
+    
+  }
+
+  
+}
+
+
+input#accompagne{
+  position:relative; margin-left:5px;
+  
+}
+
+
+#presente{
+  font-size:24px;
+  font-family:$AllerBold;
+  text-transform:uppercase;
+  
+}
+
+h1{
+  
+  font-family:$Yikes;
+  
+  font-size:40px;
+  
+}
+
+span.letter{
+      position:relative;
+     
+      display:inline-block;
+      
+    }
+
+#year{
+  
+ // width: 150px;
+  //  height: 150px;
+    border-radius: 75px;
+  //  border: 2px solid #274646;
+    color: #274646;
+    position:absolute;
+     top:10px;
+    right:0px;
+    margin:auto;
+    left: 0;
+    transform: rotate(-5deg);
+  
+  span{
+    display:block;
+    position:relative;
+     
+    transform:translateY(-50%);
+    width:100%;
+   
+    font-family:$stampFont;
+    font-size:30px;
+   
+    text-transform:uppercase;
+    
+  }
+}
+
+.lieu{
+  font-family:$AllerBold;
+  font-size:18px;
+  
+}
+
+.when{
+  margin:15px 0;
+  
+  display:block;
+   transform: rotate(-5deg);
+   font-family:$stampFont;
+    font-size:14px;
+   
+    text-transform:uppercase;
+  
+}
+
+#tournamentName{
+  font-family:$Yikes;
+  font-size:60px;
+  margin-top:-100px;
+  
+}
+
+#presente, #titreCont,#tournamentNameDiv{
+   position:absolute;
+   left:0;
+   width:100%;
+    top:50%;
+    transform:translateY(-50%);
+  
+  
+}
+
+#tournamentNameDiv{
+  left:0; right:0; margin:auto;
+  width:600px;
+  
+}
+#intro{ 
+  background:transparent;
+    position:fixed;
+    height:100%;
+    width:100%;
+    text-align:center;
+    margin:0;
+    #production{
+      
+          margin-top: -18px;
+    margin-left: 150px;
+      
+    }
+    
+  #dahuProd{
+    
+    font-family:$AllerBold;
+    font-size:45px;
+    text-transform:uppercase;
+    
+  }
+  
+}
+
+#contentDiv{
+  position:relative;
+  z-index:0;
+  
+}
+
+#aside-panel{
+  position:fixed;
+  top:0; 
+  left:0;
+  text-align:center;
+  
+  .navbar {
+  margin-top:30px;
+  }
+  
+}
+header{
+ 
+  
+}
+
+.input-group-addon{
+  background:rgba($marron,0.8);
+  border-color:$marron;
+  .fa{color:$jaune;}
+  
+}
+
+.help-block{
+  
+  line-height:12px; font-size:11px;
+  margin-bottom:0px;
+  color:$marron;
+}
+
+path.night { 
+  stroke: white;
+  stroke-width:0.5;
+  filter: url(#blur-filter);
+}
+
+form{
+  
+  position:relative;
+  
+  #wait{
+    position:absolute;
+    display:none;
+    left:0;
+    right:0;
+    margin:auto;
+    top:50%;
+    transform:translateY(-50%);
+    z-index:250;
+    
+    #waitText{
+      font-family:Yikes; font-size:24px;
+    .letter{
+      color:black;
+      
+    }
+    }
+  }
+  
+}
+
+
+label{
+  &.cbLabel{
+    width:100%;
+    
+  }
+  
+  &.error{
+  &.checkboxError{
+  
+  float:right;
+  .fa{
+    color:$marron;
+    font-size:14px;
+    
+  }
+  
+  }
+  }
+}
+
+.slider-group {
+  label{
+  margin-bottom:30px;
+  }
+}
+
+.aller{
+  font-family:$AllerBold;
+  
+  
+}
+
+.big{
+  font-size:2em;
+  
+}
+
+.uppercase{
+  text-transform:uppercase;
+  
+}
+
+form .input-group{
+  width:100%;
+  
+}
+
+#captcha-container{
+  margin-top:15px;
+  
+  img{float:left;}
+  
+  #refreshCaptcha{
+    color:#274646;
+    
+  }
+  
+}
+
+section{
+  padding:25px 15px;
+  margin-bottom:50px;
+  background:white;
+  font-family:verdana;
+  
+  
+  h3{
+    font-family:$AllerBold;
+    
+  }
+&#inscription{
+  
+  
+  margin-bottom:100px;
+  
+}
+ min-height:100vh;
+ //height:100vh;
+}
+
+#dadahu{
+    position: fixed;
+    bottom: 0;
+    left:0;
+    overflow:visible;
+    width:35%;
+   
+    
+    
+  }
+  
+  #petites_montagnes{
+     position: fixed;
+ bottom: 0;
+ right:0;
+    z-index:6000;
+    width:30%;
+    
+  }
+  
+#tournoi{
+  
+
+  
+}
+
+h2{
+ font-family:$Yikes;
+  text-transform:uppercase;
+}
+
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  svg {
+    width: 100%; 
+  }
+}
+
+
+
+
+
+.btn-primary {
+    color: #fff;
+    background-color: rgba(22,22,22,0.8);
+    border-color: rgba(29,59,93,0.6);
+}
+
+
+#langTab{
+  &.affix-top{position:absolute;}
+  width:50px;
+  margin-left:-50px;
+  
+  li{
+    background:#274646;
+    border-right:1px solid #274646;
+   
+    &:hover{
+       background:rgba(#274646,0.5);
+    }
+    &.selected{
+      background:white;
+      border-right-color:white;
+       box-shadow: -5px 0 5px -5px #333;
+      
+    }
+  a{
+    cursor:pointer;
+  display:block;
+  text-align:center;
+  width:50px; 
+  height:30px;
+  
+  span{display:block;
+    position:relative;
+    top:50%;
+    transform:translateY(-50%);
+    margin:auto;
+  }
+    
+  }
+}
+}
+
+
+.list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover {
+    z-index: 2;
+    color: #fff;
+    background-color: #274646;
+    border-color: #274646;
+}
+
+
+.tooltip{z-index:1020;}

@@ -1,0 +1,1098 @@
+<?php
+
+$isDev=($_SERVER['REMOTE_ADDR']=="90.27.61.149");
+$mapper=new Default_Model_TournoiMapper();
+
+$all=$mapper->execQuery("select * from tournoi where (confirm=1 or confirm is null or confirm=0) and update_date like '%2018%' order by nom, prenom  ",[]);
+
+//$this->headLink ()->appendStylesheet ( '/_js/lib/dropzone/css/dropzone.css' )->appendStylesheet ( '//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css' )->appendStylesheet ( '/_js/lib/bootstrap-modal/css/bootstrap-modal.css' )->appendStylesheet ( '/_js/lib/bootstrap-modal/css/bootstrap-modal-bs3patch.css' )->appendStylesheet ( '/_js/pnotify.custom.min.css' );
+//$this->headScript ()->appendFile ( '/_js/lib/bootstrap-modal/js/bootstrap-modal.js' )->appendFile ( '/_js/lib/bootstrap-modal/js/bootstrap-modalmanager.js' )->appendFile ( '/_js/lib/ajaxForm.js' )->appendFile ( '/_js/pnotify.custom.min.js' );
+
+$this->headLink()->prependStylesheet('/_css/styles.css');
+
+$this->headLink()->prependStylesheet('//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css')->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/7.0.0/css/bootstrap-slider.css')
+->appendStylesheet('/_css/css/flag-icon.css')->appendStylesheet ( '/_js/lib/bootstrap-modal/css/bootstrap-modal.css' )->appendStylesheet ( '/_js/lib/bootstrap-modal/css/bootstrap-modal-bs3patch.css' )->appendStylesheet ( '/_js/pnotify.custom.min.css' );
+;
+$this->headScript()->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/7.0.0/bootstrap-slider.min.js')->appendFile ( '/_js/lib/bootstrap-modal/js/bootstrap-modal.js' )->appendFile ( '/_js/lib/bootstrap-modal/js/bootstrap-modalmanager.js' )->appendFile ( '/_js/lib/ajaxForm.js' )->appendFile ( '/_js/pnotify.custom.min.js' )
+
+
+?>
+
+
+<aside class="col-xs-3" id="aside-panel">
+<header>
+<h1>Bornes to Catch</h1>
+<time class="when"><span class="sav">18/19 Ao&ucirc;t 2018</span><span class="fr" style="display:none">19/20 Ao&ucirc;t 2018</span><span class="uk" style="display:none">Aug. 18 &amp; 19<sup>th</sup><br />2018</span></time>
+<p class="lieu">Saint-Ferreol (74) <span class="uk" style="display:none">- France</span></p>
+</header>
+
+
+
+<div class="clearfix"></div>
+<nav class="navbar navbar-default text-center" style="background:transparent; border:none;">
+  <div class="col-xs-8 col-xs-offset-2">
+
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+  
+    </div>
+
+    
+
+
+    <div class="collapse navbar-collapse" id="navbar">
+      <ul class="nav navbar-nav">
+        <!-- <li class="active"><a href="#tournoi" id="tounoi-anchor">Le Tournoi</a></li> -->
+        <?php if(count($all)>0): ?>
+         <li class="listeInscrits"><span class="sav">Y'a </span><span class="fr" style="display:none">D&eacute;j&agrave; </span><span class="uk" style="display:none">Already</span> <?php  echo count($all) ?> <span class="sav">monchu<?php if(count($all)>1) : ?>s<?php endif; ?> d'inscrit<?php if(count($all)>1) : ?>s<?php endif; ?></span><span class="fr" style="display:none">personne<?php if(count($all)>1) : ?>s<?php endif; ?> inscrite<?php if(count($all)>1) : ?>s<?php endif; ?></span><span class="uk" style="display:none"> subscribers</span><br />
+        <a href="#" id="listeInscrits"><span class="sav">Voir la liste</span><span class="fr" style="display:none">Voir la liste</span><span class="uk" style="display:none">See the list</span></a>
+        </li>
+        <script>$('#listeInscrits').bind('click', function(e){
+        	$('#listeModal').modal();
+            });</script>
+        <?php endif; ?>
+      </ul>
+     
+      
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+</aside>
+
+<div class="col-xs-9 col-xs-offset-3" id="cont">
+<ul class="list-unstyled affix-top" id="langTab">
+ <li class="selected"><a data-lang="sav"><span class="flag-icon flag-icon-sav"></span></a></li>
+  <li><a data-lang="fr"><span class="flag-icon flag-icon-fr" ></span></a></li>
+  <li><a data-lang="uk"><span class="flag-icon flag-icon-gb"></span></a></li>
+ 
+</ul>
+
+<div class="clearfix"></div>
+
+
+<?php if(!$this->joueur):?>
+<section>
+
+<h2>
+
+<h2><span class="sav">Confirmation de ton inscription</span>
+	<span class="fr" style="display:none">Confirmation de ton inscription</span><span class="uk" style="display:none">Confirm your subscription</span></h2>
+
+
+</h2>
+
+<p>
+<strong>
+<span class="sav">Oups, je ne retrouve pas ton inscription.<br /> T'as p't&ecirc;t ben cliqu&eacute; sur le m&ocirc;vais lien, pas ?</span>
+<span class="fr" style="display:none">Oups, je ne retrouve pas ton inscription.<br />Tu as peut-&ecirc;tre cliqu&eacute; sur le mauvais lien ?</span>
+<span class="uk" style="display:none">Oups, can't find your subscription. <br />Maybe you have clicked on the wrong link !</span></h2>
+</strong>
+
+</p>
+
+<form>
+<p>
+<span class="sav">Pas de foin, donne z'y ton adresse mail pour qu'on te renvoi l'email avec le lien.</span>
+<span class="fr" style="display:none">Pas de panique, saisi ton adresse mail pour qu'on te renvoi l'email avec le lien.</span>
+<span class="uk" style="display:none">Don't panic, just fill in the form below and you'll receive an email with the good link !</span>
+</p>
+
+<p>
+<span class="sav">Si y'a un probl&egrave;me tu peux toujours nous contacter sur </span>
+<span class="fr" style="display:none">En cas de probl&egrave; tu peux toujours nous contacter sur </span>
+<span class="uk" style="display:none">If there is a problem feel free to contact us on </span>
+<a href="mailto:tournoi@dahultimate.com">tournoi@dahultimate.com</a>
+</p>
+
+
+<div class="form-group col-md-6">
+	
+	<label for="email">Ton email</label>
+	
+	<div class="input-group">
+	<input type="text" name="email" id="email" class="form-control" />
+	</div>
+	
+	</div>
+	<div class="clearfix"></div>
+<div class="col-md-6">
+	<button class="btn btn-primary" type="submit"><span class="sav">Clique-z-y</span><span class="fr" style="display:none">Valider</span><span class="uk" style="display:none">Go !</span></button>
+	</div>
+	
+	
+	<div id="wait" class="col-md-3 text-center" style="display:none">
+	<div class="col-md-6 col-md-offset-3">
+<svg id="circle-wait" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 77.3 91.3" style="overflow:visible" preserveAspectRatio="xMinYMin meet" xml:space="preserve">
+	
+ <circle cx="42.8" id="circle-wait3" cy="56.8" r="30.1" style="fill: #fdce7e"/>
+ <circle cx="42.8" id="circle-wait1" cy="56.8" r="33" style="fill: none;stroke: #9c1c18;stroke-miterlimit: 10;stroke-width: 3px"/>
+ 
+  <path id="tick" d="M23,53.2L37.5,68.2,64.3,41.7" transform="translate(0.8 0)" style="fill: none"/>
+  <g id="tete2" >
+    <path d="M30.4,47.7C29,37.9,21.4,19,16.3,15.2S1,8.7,0,26.7C-2.4,19.7.6,8.1,9.7,6.2s22.8,5.7,30.1,36.9C35.2,47.3,31.6,47.9,30.4,47.7Z" transform="translate(0.8 0)" style="fill: #bbab9e"/>
+    <path d="M54.4,45c-0.4-7.2-1.7-34.7-8.8-41.4S30.4,1,28.5,3.9,24.4,11.6,24.8,16c1.1-5,4.2-12.6,10.1-12.3s10.1,10,9.1,39.6C46.6,44.7,51.6,46.5,54.4,45Z" transform="translate(0.8 0)" style="fill: #bbab9e"/>
+    <path d="M41.6,69.7c-1.1,2.7-3.8,9.6,3.6,12.4-2.1-3.5-1-7.3,1.3-11l-4.9-1.4h0Z" transform="translate(0.8 0)" style="fill: #1e1e1c"/>
+    <path d="M33.5,51.2c-1.3-1-6.5-3.8-9.9,2.6C28.4,56.9,32.4,54.8,33.5,51.2Z" transform="translate(0.8 0)" style="fill: #9c1c18"/>
+    <path d="M62.3,48.3c-1.1-1.2-5.8-4.7-10.2,1.1C56.4,53.2,60.6,51.7,62.3,48.3Z" transform="translate(0.8 0)" style="fill: #9c1c18"/>
+    <path d="M30.4,47.7C33.5,43.1,44,37.4,54.4,45c0.7,7.3,2.6,25.7-7.5,27.3S30.9,54.8,30.4,47.7Z" transform="translate(0.8 0)" style="fill: #9c1c18"/>
+    <path d="M34.7,48.2l-0.8-.7A6.3,6.3,0,0,1,37,45.4v1.1A4.8,4.8,0,0,0,34.7,48.2Z" transform="translate(0.8 0)" style="fill: #1e1e1c"/>
+    <path d="M48.6,45.7V44.6A6.3,6.3,0,0,1,52.2,46l-0.8.7A5.1,5.1,0,0,0,48.6,45.7Z" transform="translate(0.8 0)" style="fill: #1e1e1c"/>
+    <path d="M46.1,70.4l-0.7-.2,0.2,0.2v0.4h0Z" transform="translate(0.8 0)" style="fill: #1e1e1c"/>
+    <path d="M47.7,70.3V70.1h0V69.7h0V69.3h0.4l0.3-.9H48l-0.2.7v0.2l-0.2.7h0.1v0.2Z" transform="translate(0.8 0)" style="fill: #1e1e1c"/>
+    <g id="oeil_droit2">
+      <circle cx="53.5" cy="56.4" r="4.7" transform="translate(-14.7 92.2) rotate(-73.9)" style="fill: #fff"/>
+      <circle cx="50.6" cy="58.2" r="0.9" transform="translate(-18.5 90.7) rotate(-73.9)" style="fill: #1e1e1c"/>
+    </g>
+    <g id="oeil_gauche2" >
+      <circle cx="35.6" cy="58.2" r="4.7" transform="translate(-29.4 76.3) rotate(-73.9)" style="fill: #fff"/>
+      <circle cx="37.6" cy="55.3" r="0.9" transform="translate(-25.1 76.1) rotate(-73.9)" style="fill: #1e1e1c"/>
+    </g>
+  </g>
+  
+  <circle cx="42.8" id="circle-wait2" cy="56.8" r="33" style="fill: none;stroke: #9c1c18;stroke-miterlimit: 10;stroke-width: 4px"/>
+</svg>
+</div>
+<div class="clearfix"></div>
+
+	<div id="waitText" class="col-md-12"></div>
+	<div class="text-center"><button class="btn btn-primary" id="closeWait" style="display:none">Fermer</button></div>
+	
+		</div>
+	
+	
+	
+	
+</form>
+
+<script>
+
+
+            $(document).ready(function(){
+
+
+            	$('form').validate({
+
+            		onkeyup:function(elt){
+            				$(elt).valid();
+            			},
+
+            	errorPlacement:function(error, element){
+
+
+            		var type=$(element).prop('type');
+
+            		if(type!=="checkbox")return error.insertAfter(element);
+            		$(error).addClass('checkboxError').removeClass('input-group-addon').appendTo($(element).parents('.form-group').find('label:first-child'));
+            		
+            		
+            	},
+            			
+            			debug:true,
+
+            			success: function(label, input) {
+
+            			forName=$(input).attr('name').replace(/[\[\]']+/g,'');
+
+            				 label.html('<em class="fa fa-check"></em>');
+            			 $('.help-block[data-for='+forName+']').html('&nbsp;');
+
+            			 },
+            		rules:{
+            			
+            			email:{
+            				required:true,
+            				email:true
+            				}
+         				},
+            				
+            			submitHandler:function(){
+
+            				$('body').addClass('wait');
+            				$('.alert').not('form-warning').alert('close');
+            			submited=false;
+            			$('#wait').show();
+            			$('form').css("min-height",$('form').height()+"px");
+            			$('form fieldset, form button, form .form-group').hide();
+
+            			tweenCircle();
+            				
+            				var options = { 
+            				        target:        '#output2',   // target element(s) to be updated with server response 
+            				       // beforeSubmit:  beforeSubmit,  // pre-submit callback 
+            				        success:       showResponse,
+            				        url:'/confirm/ajax?format=json',
+            				        type:'post',
+            				        dataType:'json',
+            				      //  resetForm:true ,
+            				        data:{apiCall:'resendEmail', 'ln':currLang,'from':'confirmation'}
+            				 
+            				
+            				    }; 
+            				 
+            				        $('form').ajaxSubmit(options); 
+
+
+            				}
+
+            		
+            	});
+
+
+
+
+
+
+                });
+
+
+            </script>
+
+
+</section>
+
+<?php  else :?>
+<section id="inscriptionConfirm" class="parallax" data-parallax="400">
+
+	<h2><span class="sav">Confirmation de ton inscription</span>
+	<span class="fr" style="display:none">Confirmation de ton inscription</span><span class="uk" style="display:none">Confirm your subscription</span></h2>
+	<p>
+	<span class="sav">
+	<strong>Alors <?php  echo $this->joueur->prenom ?>, toujours motiv&eacute;(e) ?</strong><br />Merci de confirmer les informations fournies lors de ton inscription.
+	</span>
+	<span class="fr" style="display:none">
+	<strong>Alors <?php  echo $this->joueur->prenom ?>, toujours motiv&eacute;(e) ?</strong><br />Merci de confirmer les informations fournies lors de ton inscription.
+	</span>
+	<span class="uk" style="display:none">
+	<strong>So <?php  echo $this->joueur->prenom ?>,are you still hot ?</strong><br />Please, confirm the informations provided.
+	</span>
+	</p>
+	
+	
+	
+	<form class="form">
+	
+	<div class="col-md-6 form-group">
+	
+	<label for="confirm">
+	<span class="sav" style="display:block">Bon, t'y viens toujours, ou bien ?</span>
+	<span class="fr" style="display:none">Bon, tu viens toujours ?</span><span class="uk" style="display:none">Are you still coming ?</span></h2>
+	
+	</label>
+	
+	<div class="input-group">
+	<select name="confirm" id="confirm" class="form-control">
+	<option value="1">Oui</option>
+	<option value="2">Nan</option>
+	
+	</select>
+	
+	<div id="reasonsWhy" class="form-group" style="display:none">
+	
+	<label for="reasons">
+	<span class="sav" style="display:block">Pourquoi don' ?</span>
+	<span class="fr" style="display:none">Quelle en est la raison ?</span><span class="uk" style="display:none">Please tell us why</span></h2>
+	
+	</label>
+	<div class="input-group">
+	<textarea id="reasons" name="reasons" class="form-control"></textarea>
+	</div>
+	</div>
+	</div>
+	</div>
+	<div class="col-md-6 form-group">
+	
+	<svg id="svg4376" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 39.4 40.3" class="col-md-2">
+  <defs>
+    <radialGradient id="degrade" cx="24.71" cy="-535.29" r="19.71" gradientTransform="matrix(1, 0, 0, -0.33, 0, -139.86)" gradientUnits="userSpaceOnUse">
+      <stop offset="0"/>
+      <stop offset="1" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="degrade_2"  cx="-176.61" cy="175.51" r="8.9" gradientTransform="matrix(2.08, 0, 0, -2.08, 388.38, 381.86)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fffcde"/>
+      <stop offset="0.64" stop-color="#f6e76a"/>
+      <stop offset="1" stop-color="#ffb738"/>
+    </radialGradient>
+    <radialGradient id="degrade_3" cx="-54.15" cy="501.09" r="15.76" gradientTransform="translate(-43.4 659.6) rotate(180) scale(1.25)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#777"/>
+      <stop offset="1"/>
+    </radialGradient>
+    <radialGradient id="degrade_3-2" cx="-54.15" cy="501.09" r="15.76" gradientTransform="translate(92.5 -602.2) scale(1.25)" xlink:href="#degrade_3"/>
+  </defs>
+  <title>sad</title>
+  <g id="layer1">
+    <path id="path4563" d="M44.4,38.6c0,3.6-8.8,6.6-19.7,6.6S5,42.2,5,38.6,13.8,32,24.7,32,44.4,34.9,44.4,38.6Z" transform="translate(-5 -4.8)" style="opacity: 0.5316455960273743;isolation: isolate;fill: url(#degrade)"/>
+    <path id="path4320" d="M42.3,23.1a18,18,0,1,1-36.1,0s0,0,0,0a18,18,0,1,1,36.1,0h0Z" transform="translate(-5 -4.8)" style="stroke: #9c8c0a;stroke-linecap: round;stroke-linejoin: round;stroke-width: 0.48004403710365295px;fill: url(#degrade_2)"/>
+    <path id="path4322" d="M41.4,23.1a17.1,17.1,0,1,1-34.3,0s0,0,0,0a17.1,17.1,0,1,1,34.3,0h0Z" transform="translate(-5 -4.8)" style="fill: none;stroke: #fff;stroke-linecap: round;stroke-linejoin: round;stroke-width: 0.5051062703132629px;opacity: 0.6772152185440063;isolation: isolate"/>
+   
+    <path id="sourire" d="M15.1,26.1c3.7,4.2,5.6,5.6,9.6,5.6s6.5-1.7,9.4-6c-3.4,2.3-5.3,3.6-9.1,3.6S19.2,28.3,15.1,26.1Z" transform="translate(-5 -4.8)" style="fill: url(#degrade_3)"/>
+    <g id="zyeux">
+      <path id="oG" d="M21.8,17.1c0,2.5-1.1,4.5-2.5,4.5s-2.5-2-2.5-4.5,1.1-4.5,2.5-4.5S21.8,14.6,21.8,17.1Z" transform="translate(-5 -4.8)"/>
+      <path id="oD" d="M31,17.1c0,2.5-1.1,4.5-2.5,4.5s-2.5-2-2.5-4.5,1.1-4.5,2.5-4.5S31,14.6,31,17.1Z" transform="translate(-5 -4.8)"/>
+    </g>
+  </g>
+</svg>
+	
+	
+	<script>
+$(document).ready(function(){
+
+
+	<?php  if(!empty($_GET['ln'])):?>
+
+
+	$('a[data-lang=<?php echo $_GET['ln'] ?>]').click();
+
+
+
+
+	<?php  endif;?>
+	
+});
+$('#confirm').bind('change',smile);
+	
+	function smile(){
+
+	var pathSad="M34,31.3c-3.7-4.2-5.6-5.6-9.6-5.6s-6.5,1.7-9.4,6c3.4-2.3,5.3-3.6,9.1-3.6S29.9,29.1,34,31.3Z";
+	var pathHappy="M15.1,26.1c3.7,4.2,5.6,5.6,9.6,5.6s6.5-1.7,9.4-6c-3.4,2.3-5.3,3.6-9.1,3.6S19.2,28.3,15.1,26.1Z";
+	var saisPas="M35.8,30c-3.8-4.1-7.3-4.4-11.3-4.3S16,23.6,13.3,27.9c3.4-2.4,7.2.2,11,.1S31.6,27.9,35.8,30Z";
+d=null;
+switch(parseInt($('#confirm').val())){
+
+case 1:
+	d=pathHappy;
+
+	TweenLite.to('#oD',0.5,{rotation:0,transformOrigin:'50% 50%'});
+	TweenLite.to('#oG',0.5,{rotation:0,transformOrigin:'50% 50%'});
+	$('#reasonsWhy').stop().fadeOut();
+	$("fieldset").stop().fadeIn();
+	break;
+	
+case 2:
+	d=pathSad;
+
+	TweenLite.to('#oD',0.5,{rotation:-30,transformOrigin:'50% 50%'});
+	TweenLite.to('#oG',0.5,{rotation:30,transformOrigin:'50% 50%'});
+	$('#reasonsWhy').stop().fadeIn();
+	$("fieldset").stop().fadeOut();
+	break;
+
+case 3:
+	d=saisPas;
+	TweenLite.to('#oD',0.5,{rotation:10,transformOrigin:'50% 50%'});
+	TweenLite.to('#oG',0.5,{rotation:20,transformOrigin:'50% 50%'});
+	$('#reasonsWhy').stop().fadeIn();
+	$("fieldset").stop().fadeIn();
+	break;
+	
+};
+
+	if(d)TweenLite.to($('#sourire'),0.5,{morphSVG:d});
+
+}
+
+
+	</script>
+	
+	
+	
+	</div>
+	
+	<div class="clearfix"></div>
+	
+	<fieldset class="col-md-6">
+	<legend>
+		<span class="sav">
+	Dis-nous en un peu sur toi
+	</span>
+	<span class="fr" style="display:none">
+	Qui es tu ?
+	</span>
+	<span class="uk" style="display:none">
+	Who are you ?
+	</span>
+	
+	</legend>
+	<div class="form-group col-md-12">
+	
+	<label for="nom">Ton nom</label>
+	
+	<div class="input-group">
+	<input type="text" name="nom" id="nom" class="form-control" />
+	</div>
+	</div>
+	
+	
+	<div class="form-group col-md-12">
+	
+	<label for="prenom">Ton petit nom</label>
+	
+	<div class="input-group">
+	<input type="text" name="prenom" id="prenom" class="form-control" />
+	</div>
+	</div>
+	<div class="form-group col-md-12">
+	
+	<label for="email">Ton email</label>
+	
+	<div class="input-group">
+	<input type="text" name="email" id="email" class="form-control" />
+	</div>
+	
+	</div>
+	
+	<div class="form-group col-md-12">
+	
+	<label for="dob">Date de naissance</label>
+	
+	<div class="input-group">
+	<input name="dob" id="dob" class="form-control" placeholder="01/12/1990" />
+
+	</div>
+	
+	</div>
+	
+	<div class="form-group col-md-12">
+	
+	<label for="sexe">Sexe</label>
+	<p class="alert alert-warning form-warning">
+	<em class="fa fa-exclamation-triangle"></em>
+	<span class="sav">
+	V&eacute;rifie z'y, y'a des joueurs qui se sont gourr&eacute;s de sexe (faut quand m&ecirc;me y faire) ! 
+	</span>
+	<span class="fr" style="display:none">
+	V&eacute;rifie bien, il semblerait que certains joueurs se soient tromp&eacute;s de sexe (faut quand m&ecirc;me le faire) !
+	</span>
+	<span class="uk" style="display:none">
+	Please check, we guess some people indicated the wrong sexe (How can it be !) 
+	</span>
+	
+	
+	</p>
+	<div class="input-group">
+	<select name="sexe" id="sexe" class="form-control">
+	<option value="1">Je suis une femme</option>
+	<option value="2">Je suis un homme</option>
+	</select>
+
+	</div>
+	
+	</div>
+	
+	
+<div class="form-group col-md-12">
+	<label for="type">Je souhaite participer :</label>
+	<div class="input-group">
+	<select name="type" id="type" class="form-control">
+	<option value="1">n'en tant que joueur</option>
+	<option value="2">n'en tant qu'invit&eacute</option>
+	</select>
+
+	</div>
+	
+	</div>
+	
+	
+	<div class="checkbox col-md-12">
+	
+	<label><span for="accompagne">Je serais accompagn&eacute; </span><input type="checkbox" name="accompagne" id="accompagne" value="1" /> </label>
+	<div class="clearfix"></div>
+	
+		
+	</div>
+	
+	<div id="companionDiv" style="display:none">
+	<div class="form-group col-md-6">
+	<label for="adulte">Nb d'adulte(s) :</label>
+	<div class="input-group">
+	<input type="number" name="adulte" id="adulte" min="0"  value="0" class="form-control" />
+	</div>
+	
+	</div>
+	
+	
+	<div class="form-group col-md-6">
+	<label for="enfant">Nb d'enfant(s) :</label>
+	<div class="input-group">
+	<input type="number" name="enfant" id="enfant" min="0" value="0" class="form-control" />
+	</div>
+	
+	</div>
+	</div>
+	<div class="form-group">
+		<label for="comment"><span class="sav">Un tit mot ?</span><span class="fr" style="display:none">Un commentaire ?</span><span class="uk" style="display:none">Any comment ?</span></label>
+	
+	<p class="alert alert-warning form-warning" id="warningComments">
+	
+	<em class="fa fa-exclamation-triangle"></em>
+	<span class="sav">On est des bablais, on n'a pas enregistr&eacute; tous les commentaires (mais on a gard&eacute; les mails d'inscription). Mets z y un commentaire si tu as quequ' chose d'intelligent &agrave; dire.</span>
+	<span class="fr" style="display:none">Pauvres de nous, on n'a pas enregistr&eacute; tous les commentaires (mais on a gard&eacute; les mails d'inscription). Laisse nous un commentaire si tu as quelque chose d'intelligent &agrave; dire</span>
+	<span class="uk" style="display:none">We are nuts, we didn't record the comments (but we kept the subscriptions mails). Please leave a comment if you have something clever to say.</span>
+	</p>
+	
+	<div class="input-group">
+	<textarea id="comment" name="comment" class="form-control"></textarea>
+	</div>
+	
+	</div>
+	
+	<div class="clearfix"></div>
+	</fieldset>
+	
+	<fieldset class="col-md-6" id="compFs">
+	<legend><span class="sav">
+	Ton niveau &agrave; l'ultimate
+	</span>
+	<span class="fr" style="display:none">
+	Ton niveau &agrave; l'ultimate
+	</span>
+	<span class="uk" style="display:none">
+	Your ultimate skills
+	</span></legend>
+	
+	<div class="form-group col-md-12">
+	
+	<label for="club">Ton club</label>
+	
+	<div class="input-group">
+	<input name="club" id="club" class="form-control" />
+	</div>
+		
+		<div class="checkbox">
+  <label>
+    <input type="checkbox" value="1" name="noclub" id="noclub" />
+    <span for="noclub">Je ne joue pas n'en club</span>
+  </label>
+</div>
+		
+	</div>
+	
+	<div class="form-group col-md-12">
+	<label for="poste1" class="cbLabel">O&ucirc; que tu joues ?</label>
+	
+	<p class="alert alert-warning" id="warningPostes" style="display:none">
+	<em class="fa fa-exclamation-triangle"></em>
+	<span class="sav">Lors de ton inscription, un coup de vent a fait bugger le syst&egrave;me et les postes que tu avais indiqu&eacute;s se sont perdus en route :( !</span>
+		<span class="fr" style="display:none">Lors de ton inscription, un coup de vent a fait bugger le syst&egrave;me et les postes que tu avais indiqu&eacute;s se sont perdus en route :( !</span>
+		<span class="uk" style="display:none">Unfortunatelly, we had a bug during your subscription and we lost your positions :( !</span>
+	
+	
+	</p>
+	<div class="clearfix"></div>
+	<label class="checkbox-inline">
+  <input type="checkbox" id="poste1" name="poste[]" value="1"> Handler
+</label>
+<label class="checkbox-inline">
+  <input type="checkbox" id="poste2" name="poste[]" value="2"> Middle
+</label>
+<label class="checkbox-inline">
+  <input type="checkbox" name="poste[]" id="poste3" value="3"> Deep
+</label>
+	<p class="help-block" data-for="poste">&nbsp;</p>
+	
+	</div>
+	
+	<div class="form-group slider-group col-md-12">
+	
+	
+	
+	
+	<label for="technique">Ton niveau technique <span class="help-text">(technique pure et tactique)</span></label>
+	
+	<div class="input-group text-center">
+	<span class="col-md-3">Chuis une vraie gniauque</span>
+	<div class="col-md-6">
+	<input id="technique" name="technique" class="slider form-control" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="10" data-slider-step="1" data-slider-value="0" style="width:100%" />
+	</div>
+	<span class="col-md-3">&Ccedil;a qu'est des dieux du frisbee ! </span>
+	</div>
+	</div>
+	
+	
+	<div class="form-group slider-group col-md-12">
+	<label for="physique">Ton niveau physique</label>
+	<div class="input-group text-center">
+	<span class="col-md-3">Chuis un baban</span>
+	<div class="col-md-6">
+	<input id="physique" name="physique" class="slider form-control" data-slider-id='ex2Slider' type="text" data-slider-min="0" data-slider-max="10" data-slider-step="1" data-slider-value="0" style="width:100%" />
+	</div>
+	<span class="col-md-3">Je peux pataler toute la journ&eacute;e sans &ecirc;tre vann&eacute;</span>
+	</div>
+	</div>
+	
+	
+	<div class="clearfix"></div>
+	<h3>
+	<span class="sav">Informations compl&eacute;mentaires</span>
+	<span class="fr" style="display:none">Informations compl&eacute;mentaires</span>
+	<span class="uk" style="display:none">Additional information</span>
+	
+	</h3>
+	
+	<div class="form-group col-md-12">
+	<label for="party"><span class="sav">Je serais pr&eacute;sent &agrave; la welcome party </span>
+	<span class="fr" style="display:none">Je serais pr&eacute;sent &agrave; la welcome party </span>
+	<span class="uk" style="display:none">I'll be at the welcome party </span>
+	
+	:</label>
+	<div class="input-group">
+	<select name="party" id="party" class="form-control">
+	<option value="1">Vi</option>
+	<option value="2">Nan</option>
+	<option value="3">Sais po</option>
+	</select>
+
+	</div>
+	
+	</div>
+	
+	
+	<div class="form-group col-md-12">
+	<label for="regime"><span class="sav">Si tu manges (ou p&ocirc;) des trucs sp&eacute;ciaux, dis-y</span>
+	<span class="fr" style="display:none">Si tu as un r&eacute;gime particulier, merci de le pr&eacute;ciser</span>
+	<span class="uk" style="display:none">Tell us if you have a special diet</span>
+	
+	:</label>
+	<div class="input-group">
+	<textarea name="regime" id="regime" class="form-control"></textarea>
+
+	</div>
+	
+	</div>
+	
+	
+	<div class="form-group col-md-12">
+	<label for="playlist"><span class="sav">Une suggestion pour la playlist du tournoi ?</span>
+	<span class="fr" style="display:none">Une suggestion pour la playlist du tournoi ?</span>
+	<span class="uk" style="display:none">Any song to suggest for the playlist of the tournament</span>
+	
+	:</label>
+	<div class="input-group">
+	<textarea name="playlist" id="playlist" class="form-control"></textarea>
+
+	</div>
+	
+	</div>
+	
+	</fieldset>
+	<div class="clearfix"></div>
+	
+	<div class="form-group col-md-6 ">
+                 
+               <div class="clearfix"></div>
+               
+               
+               <div class="col-md-6">
+                <label for="captchaInput">Copie z'y le code *</label>   
+               <div class="input-group">
+                
+              <input type="hidden" name="token" value="<?php  echo $_GET["token"]?>" />
+                    
+                     <input type="text" class="form-control" id="captchaInput" name="captcha[input]" value="" maxlength="6" required>
+                </div>
+                
+                </div>
+                  <div id="captcha-container" class="col-md-6" style="">
+                 <?php  echo $this->partial('captcha.phtml');?>
+                 </div>
+                 <div class="clearfix"></div>
+                 
+            </div>
+	
+	
+	
+	<script>
+<?php  unset($this->joueur->id_inscription);?>
+
+	var joueurData=<?php  echo json_encode($this->joueur)?>;
+
+	</script>
+	
+	
+	
+	<div class="text-center col-md-6">
+	
+		<button class="btn btn-primary" type="submit"><span class="sav">Clique-z-y</span><span class="fr" style="display:none">Valide ton inscription</span><span class="uk" style="display:none">Go and validate</span></button>
+	</div>
+		<div class="clearfix"></div>
+		
+		<div id="wait" class="col-md-3 text-center" style="display:none">
+	<div class="col-md-6 col-md-offset-3">
+<svg id="circle-wait" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 77.3 91.3" style="overflow:visible" preserveAspectRatio="xMinYMin meet" xml:space="preserve">
+	
+ <circle cx="42.8" id="circle-wait3" cy="56.8" r="30.1" style="fill: #fdce7e"/>
+ <circle cx="42.8" id="circle-wait1" cy="56.8" r="33" style="fill: none;stroke: #9c1c18;stroke-miterlimit: 10;stroke-width: 3px"/>
+ 
+  <path id="tick" d="M23,53.2L37.5,68.2,64.3,41.7" transform="translate(0.8 0)" style="fill: none"/>
+  <g id="tete2" >
+    <path d="M30.4,47.7C29,37.9,21.4,19,16.3,15.2S1,8.7,0,26.7C-2.4,19.7.6,8.1,9.7,6.2s22.8,5.7,30.1,36.9C35.2,47.3,31.6,47.9,30.4,47.7Z" transform="translate(0.8 0)" style="fill: #bbab9e"/>
+    <path d="M54.4,45c-0.4-7.2-1.7-34.7-8.8-41.4S30.4,1,28.5,3.9,24.4,11.6,24.8,16c1.1-5,4.2-12.6,10.1-12.3s10.1,10,9.1,39.6C46.6,44.7,51.6,46.5,54.4,45Z" transform="translate(0.8 0)" style="fill: #bbab9e"/>
+    <path d="M41.6,69.7c-1.1,2.7-3.8,9.6,3.6,12.4-2.1-3.5-1-7.3,1.3-11l-4.9-1.4h0Z" transform="translate(0.8 0)" style="fill: #1e1e1c"/>
+    <path d="M33.5,51.2c-1.3-1-6.5-3.8-9.9,2.6C28.4,56.9,32.4,54.8,33.5,51.2Z" transform="translate(0.8 0)" style="fill: #9c1c18"/>
+    <path d="M62.3,48.3c-1.1-1.2-5.8-4.7-10.2,1.1C56.4,53.2,60.6,51.7,62.3,48.3Z" transform="translate(0.8 0)" style="fill: #9c1c18"/>
+    <path d="M30.4,47.7C33.5,43.1,44,37.4,54.4,45c0.7,7.3,2.6,25.7-7.5,27.3S30.9,54.8,30.4,47.7Z" transform="translate(0.8 0)" style="fill: #9c1c18"/>
+    <path d="M34.7,48.2l-0.8-.7A6.3,6.3,0,0,1,37,45.4v1.1A4.8,4.8,0,0,0,34.7,48.2Z" transform="translate(0.8 0)" style="fill: #1e1e1c"/>
+    <path d="M48.6,45.7V44.6A6.3,6.3,0,0,1,52.2,46l-0.8.7A5.1,5.1,0,0,0,48.6,45.7Z" transform="translate(0.8 0)" style="fill: #1e1e1c"/>
+    <path d="M46.1,70.4l-0.7-.2,0.2,0.2v0.4h0Z" transform="translate(0.8 0)" style="fill: #1e1e1c"/>
+    <path d="M47.7,70.3V70.1h0V69.7h0V69.3h0.4l0.3-.9H48l-0.2.7v0.2l-0.2.7h0.1v0.2Z" transform="translate(0.8 0)" style="fill: #1e1e1c"/>
+    <g id="oeil_droit2">
+      <circle cx="53.5" cy="56.4" r="4.7" transform="translate(-14.7 92.2) rotate(-73.9)" style="fill: #fff"/>
+      <circle cx="50.6" cy="58.2" r="0.9" transform="translate(-18.5 90.7) rotate(-73.9)" style="fill: #1e1e1c"/>
+    </g>
+    <g id="oeil_gauche2" >
+      <circle cx="35.6" cy="58.2" r="4.7" transform="translate(-29.4 76.3) rotate(-73.9)" style="fill: #fff"/>
+      <circle cx="37.6" cy="55.3" r="0.9" transform="translate(-25.1 76.1) rotate(-73.9)" style="fill: #1e1e1c"/>
+    </g>
+  </g>
+  
+  <circle cx="42.8" id="circle-wait2" cy="56.8" r="33" style="fill: none;stroke: #9c1c18;stroke-miterlimit: 10;stroke-width: 4px"/>
+</svg>
+</div>
+<div class="clearfix"></div>
+
+	<div id="waitText" class="col-md-12"></div>
+	<div class="text-center"><button class="btn btn-primary" id="closeWait" style="display:none">Fermer</button></div>
+	
+		</div>
+		
+	</form>
+	
+</section>
+
+
+<script>
+
+
+$('form').validate({
+
+	onkeyup:function(elt){
+			$(elt).valid();
+		},
+
+errorPlacement:function(error, element){
+
+
+	var type=$(element).prop('type');
+
+	if(type!=="checkbox")return error.insertAfter(element);
+	$(error).addClass('checkboxError').removeClass('input-group-addon').appendTo($(element).parents('.form-group').find('label:first-child'));
+	
+	
+},
+		
+		debug:true,
+
+		success: function(label, input) {
+
+		forName=$(input).attr('name').replace(/[\[\]']+/g,'');
+
+			 label.html('<em class="fa fa-check"></em>');
+		 $('.help-block[data-for='+forName+']').html('&nbsp;');
+
+		 },
+	rules:{
+		nom:{required:hasConfirmed},
+		reasons:{required:true, depends:!hasConfirmed},
+		prenom:{required:hasConfirmed},
+		'poste[]':{
+	required:hasConfirmed
+			},
+		email:{
+			required:hasConfirmed,
+			email:true
+			},
+			dob:{
+			required:hasConfirmed,
+			frenchDate:true,
+			check_date_of_birth:16
+				},
+				 "captcha[input]":{
+
+		                required:true,
+		                minlength:3 
+		                
+		                },
+			adulte:{
+				
+				companion:true, 
+				//depends:hasConfirmed
+				},
+				enfant:{
+				
+					companion:true//, depends:hasConfirmed
+					//depends: checkCompanion
+					},
+					club:{required:{
+						depends:function(){
+							return $('#type').val()=='1'&&!$('#noclub').is(':checked')&&hasConfirmed;
+							}
+
+						}}
+		
+		},
+		messages:{
+		'poste[]':function(){return 'Tu dois choisir au moins un poste';}
+			},
+			
+		submitHandler:function(){
+
+			var options = { 
+			        target:        '#output2',   // target element(s) to be updated with server response 
+			        beforeSubmit:  function(data, $form, options){
+			        	var dob = $('#dob').val();
+			        	dob.value=moment($('#dob').val(),'DD-MM-YYYY').format('DD/MM/YYYY');
+			        		$('body').addClass('wait');
+			        		$('.alert').alert('close');
+			        	submited=false;
+			        	$('#wait').show();
+			        	$('form').css("min-height",$('form').height()+"px");
+			        	$('form fieldset, form button, form .form-group').hide();
+
+			        	tweenCircle();
+
+
+			        	return true;
+			        		
+			        	},  // pre-submit callback 
+			        success:       showResponse,
+			        url:'/confirm/ajax?format=json',
+			        type:'post',
+			        dataType:'json',
+			      //  resetForm:true ,
+			        data:{apiCall:'validateTournament', 'ln':currLang}
+			 
+			
+			    }; 
+			 
+
+			        // inside event callbacks 'this' is the DOM element so we first 
+			        // wrap it in a jQuery object and then invoke ajaxSubmit 
+			        $('form').ajaxSubmit(options); 
+
+
+			}
+
+	
+});
+
+
+function hasConfirmed(){
+
+
+return parseInt($('#confirm').val())!==2;
+	
+}
+
+
+	</script>
+
+
+<?php  endif;?>
+
+</div>
+
+
+<div class="clearfix"></div>
+
+
+<script>
+
+var submited=false, tlWait=new TimelineMax({repeat:-1, paused:true}), tlWaitContent=$('#waitText').html();
+
+
+
+//TweenMax.staggerFrom("#waitText span.letter", 0.3, { left:'-10px', top:'-10px', transformOrigin:'50% 50%',color: 'transparent', ease:Circ.easeOut, yoyo:true, repeat:-1 }, 0.2)
+
+
+
+
+function initTween(id,rotation){
+
+	if(submited==true) return;
+
+
+	new TweenMax.to($('#'+id),1.5,{rotation:'+='+rotation,ease:Linear.easeIn, transformOrigin:'50% 50%', onComplete:function(){initTween(id,rotation)}});
+	
+}
+
+
+
+function showResponse(response){
+
+	submited=true;
+	
+
+	
+
+	$alert=$('<div class="alert alert-link alert-dismissible" role="alert">'+
+			  '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
+			  '<strong></strong>'+
+			'</div>');
+	$('#captcha-container').click();
+
+	
+	if(response.success){
+
+		finishTween(response.msg);
+
+		$('#closeWait').remove();
+
+	
+		
+		return;
+		}
+	else {
+
+		$alert.addClass('alert-danger');
+		$alert.find('strong').html('<em class="fa fa-check"></em> '+response.error);
+		}
+
+	window.setTimeout(function(){
+
+		tlWait.stop(0);
+		
+		
+	$alert.insertBefore($('form')).alert();
+	resetForm();
+	TweenMax.to(window, 0.5, {
+	    scrollTo : {
+	      y : $alert.position().top,
+	      autoKill : true // Allow scroll position to change outside itself
+	    },
+	    ease : Cubic.easeInOut
+	  });
+	},5000);
+
+	
+}
+
+
+
+
+var tlWaitCircle, pathCircle, pathTick;
+MorphSVGPlugin.convertToPath("#circle-wait2");
+pathCircle=$("#circle-wait2").attr('d');
+pathTick=$("#tick").attr('d');
+
+function tweenCircle(){
+
+	$('#waitText').html(objTrad[currLang].other.waitText);
+
+tlWaitCircle=new TimelineMax({repeat:-1});
+$.each($('#waitText .initial'), function(index, span){
+
+	$(span).wrapEach(/(.)/g, "<span class=\"letter\">$1</span>");
+
+	
+});
+
+tlWait=new TimelineMax({paused:true});
+
+tlWait.add(TweenMax.staggerFrom("#waitText span.letter", 0.3, {transformOrigin:'50% 50%',color: 'transparent', ease:Linear.easeOut, yoyo:true, repeat:-1}, 0.1));
+
+
+TweenMax.set($('#circle-wait1'),{opacity:0.2});
+TweenMax.set($('#tete2'),{opacity:1});
+TweenMax.set($('#circle-wait2'),{opacity:0, morphSVG:pathCircle, stroke:'#9c1c18'});
+TweenMax.set([$('#tick'), $('#circle-wait3')],{scale:1, transformOrigin:'50% 50%'})
+TweenMax.set($('#circle-wait3'),{fill:'#fdce7e'})
+
+var tween1=new TweenMax.to($('#circle-wait1'),1,{drawSVG:'100%', ease:Circ.easeIn, transformOrigin:'50% 50%'});
+var tween2=new TweenMax.to($('#circle-wait1 '),1,{drawSVG:'0%', rotation:"+=360", transformOrigin:"50% 50%", ease:Circ.easeOut});
+var tween3=new TweenMax.fromTo($('#circle-wait1'),2,{opacity:0.2}, {opacity:0.5,ease:Elastic.easeIn});
+
+/*var tween5=new TweenMax.to($('#circleWait2'),0.4,{drawSVG:'100%', ease:Linear.easeIn, transformOrigin:'50% 50%'});
+var tween4=new TweenMax.to($('#circleWait2 '),0.4,{drawSVG:'0%', rotation:"-=360", transformOrigin:"50% 50%", ease:Linear.easeIn});*/
+
+tlWaitCircle.add(tween2).add(tween1).add(tween3,0);//.add(tween4,0).add(tween5,0);
+
+
+
+tlWaitCircle.play(0);
+tlWait.play(0);
+
+	
+}
+
+
+var tlFinish;
+
+function resetForm(){
+	
+	$('form button, form .form-group').fadeIn();
+	$('#confirm').change();
+	$('#wait').fadeOut();
+	$('body').removeClass('wait');
+	tlWait.kill();
+	tlWaitCircle.kill();
+	$('#closeWait').hide();
+
+
+	
+if(!hasConfirmed()) return;
+	
+
+		$('fieldset').fadeIn();
+	
+	
+
+	$('#accompagne, #noclub, #type').change();
+	
+}
+
+function finishTween(text){
+tlWait.pause(0);
+	
+	$('#waitText').html(text).css('opacity',0);
+	tlWaitCircle.pause(0);
+
+	
+	TweenMax.set($('#circle-wait1'),{opacity:0});
+	TweenMax.set($('#circle-wait2'),{opacity:0.2});
+
+
+	
+	tlFinish=new TimelineMax();
+		var t1= new TweenMax.to($('#circle-wait2'),1.2,{morphSVG:pathTick, stroke:'white', opacity:1, ease:Elastic.easeOut, scale:0.7, transformOrigin:'50% 50%'});
+	var t2= new TweenMax.to($('#tete2'),0.5,{opacity:0});
+	var t3= new TweenMax.to($('#circle-wait3'),0.5,{fill:'green', scale:0.7, transformOrigin:'50% 50%'});
+	var t4= new TweenMax.to($('#waitText'),0.5,{opacity:1,  transformOrigin:'50% 50%'});
+	
+tlFinish.add(t3).add(t2,0).add(t1).add(t4,'-=0.5');
+
+tlFinish.play(0);
+	//fdce7e
+
+	$('#closeWait').fadeIn();
+	
+//window.setTimeout(resetForm,5000);
+
+	
+}
+
+
+
+</script>
+<script src="/_js/tournoi.js"></script>
+     
+  
+<?php  echo $this->partial('listejoueurs.phtml',['all'=>$all]);?>
+
+
+
+
+<style>
+
+body.current, body{
+background:linear-gradient(to bottom,rgba(29,59,93,.3) 0,#fff 20%,#fff 60%,rgba(29,59,93,.6))
+
+}
+
+</style>
+
+
