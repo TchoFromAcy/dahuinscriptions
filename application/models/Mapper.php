@@ -102,7 +102,7 @@ class Default_Model_Mapper
 	public function fetchAll($where=""){
 
 		$select=$this->getDbTable()->select();//
-		 
+
 		if(!empty($where))$select->where($where);
 		$result= $this->getDbTable()->getAdapter()->fetchAll($select);
 		return $result;

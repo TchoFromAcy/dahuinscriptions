@@ -8,7 +8,7 @@
  *
  */
 
-class Default_Model_DbTable_Btcalbum extends Default_Model_DbTable_Table{
+class Default_Model_DbTable_B2cPoule extends Default_Model_DbTable_Table{
 
 	/**
 	 * 

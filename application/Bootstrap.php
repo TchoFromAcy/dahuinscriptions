@@ -50,7 +50,18 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		$config = new Zend_Config_Ini(APPLICATION_PATH . DIRECTORY_SEPARATOR.'configs'.DIRECTORY_SEPARATOR.'application.ini', APPLICATION_ENV);
 	
 		$frontController->getRouter()->addConfig($config, 'routes');
-	
+
+        $testRoute = new Zend_Controller_Router_Route(
+            'restAPI/:type/:item_id',
+            array(
+                'controller' => 'rest',
+                'action' => 'doRequest',
+                'module' => 'default'
+            )
+        );
+
+        $frontController->getRouter()->addRoute('test', $testRoute);
+
 	}
 	
 	

@@ -57,6 +57,34 @@ public function getTeams(){
 
     }
 
+    public function dorequestAction(){
+echo "ok";
+
+$type=$this->_request->getParam('type');
+if($this->getRequest()->isPut()) {
+
+    $body = $this->getRequest()->getRawBody();
+    $data = Zend_Json::decode($body);
+
+    var_dump($data);
+    die();
+
+}
+
+    }
+
+    public function getPoules(){
+
+        $mapper = new Default_Model_B2cPouleMapper();
+
+        $results = $mapper->fetchAll();
+        return $this->sendJSONResponse(true,$results);
+
+
+
+
+    }
+
     private function sendJSONResponse($success=true, array $results=[]){
 
         $data=['success'=>$success,'data'=>$results];
