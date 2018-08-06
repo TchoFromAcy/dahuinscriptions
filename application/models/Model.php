@@ -95,7 +95,7 @@ class Default_Model_Model{
 		 */
 		public function dataToArray(){
 	
-			return (array) $this->_colsArray;
+			return (array) $this->getData();
 	
 		}
 		/**

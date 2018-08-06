@@ -130,7 +130,7 @@ class Default_Model_Mapper
 
 	}
 
-	public function getModel(array $row=array()){
+	public function getModel(array $row=array()):Default_Model_Model{
 
 		$model_className = $this->tablePrefix .'_'. ucfirst($this->_tableName);
 		
