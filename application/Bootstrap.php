@@ -51,7 +51,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 	
 		$frontController->getRouter()->addConfig($config, 'routes');
 
-        $testRoute = new Zend_Controller_Router_Route(
+        $restAPIOperation = new Zend_Controller_Router_Route(
             'restAPI/:type/:item_id',
             array(
                 'controller' => 'rest',
@@ -60,8 +60,17 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             )
         );
 
-        $frontController->getRouter()->addRoute('test', $testRoute);
+        $frontController->getRouter()->addRoute('RestApiOperation', $restAPIOperation);
 
+        $restAPList = new Zend_Controller_Router_Route(
+            'restAPI/:type',
+            array(
+                'controller' => 'rest',
+                'action' => 'doRequest',
+                'module' => 'default'
+            )
+        );
+        $frontController->getRouter()->addRoute('restAPList     ', $restAPList);
 	}
 	
 	
