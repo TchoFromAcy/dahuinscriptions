@@ -51,7 +51,7 @@ class RestController extends Zend_Controller_Action
         $usersMapper = new Default_Model_TournoiMapper();
 
 //        $sql = "select * from " . $usersMapper->getDbTable()->__get('_name') . " where update_date like '%" . strftime('%Y') . "%'"; //
-        $results = $usersMapper->fetchAll("update_date like '%" . strftime('%Y') . "%'");
+        $results = $usersMapper->fetchAll("update_date like '%" . strftime('%Y') . "%' and confirm>0");
 
 
 	/*    $results=array_map(function($a){
