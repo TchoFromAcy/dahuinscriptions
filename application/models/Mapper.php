@@ -114,7 +114,7 @@ class Default_Model_Mapper
 	 * @param int $id id de l'enregistrement
 	 * @return boolean|Admin_Model_Model retourne faux si aucun enregistrement trouv&eacute; ou le model associ&eacute;
 	 */
-	public function find($id):Admin_Model_Model{
+	public function find($id):Default_Model_Model{
 
 
 		$result=$this->getDbTable()->find($id);
