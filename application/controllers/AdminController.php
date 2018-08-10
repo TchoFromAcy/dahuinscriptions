@@ -1576,16 +1576,28 @@ class AdminController extends Zend_Controller_Action {
 				];
 		
 		$file = tempnam ( "tmp", "zip" );
-		
+
+		$spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+		$spreadsheet->setActiveSheetIndex(0);
+		$sheet=$spreadsheet->getActiveSheet();
+
+
 		$zip = new ZipArchive();
 		$zip->open($file, ZipArchive::OVERWRITE);
 		$fp = fopen ( APPLICATION_PATH . '/export/export.csv', 'w+' );
 	//	fputcsv ( $fp, $headers, ";" );
-		
+
+		$row=0;
+
 		foreach ( $licences as $licence ) :
 		$licenceData = $mapper->find ( $licence );
 
-		$joueur = [
+
+		$sheet->fromArray($licenceData->dataToArray(),null, 'A'.$row);
+		$row++;
+
+
+		/*$joueur = [
 		$licenceData->__get ( 'nom' ),
 		$licenceData->__get ( 'prenom' ),
 		$licenceData->__get ( 'email' ),
@@ -1596,15 +1608,21 @@ class AdminController extends Zend_Controller_Action {
 		$licenceData->__get ( 'poste' )
 				];
 			
-		$joueur=array_map('utf8_decode',$joueur);
+		//$joueur=array_map('utf8_decode',$joueur);
 		fputcsv($fp, $joueur,";");
+		*/
 		endforeach
 		;
 		
 		
 		fclose($fp);
-		
-		$zip->addFile(APPLICATION_PATH . '/export/export.csv','liste.csv');
+
+		$writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+		$writer->setOffice2003Compatibility(true);
+		$writer->save(APPLICATION_PATH . '/export/export_tournoi.xlsx');
+
+		$spreadsheet->disconnectWorksheets();
+		$zip->addFile(APPLICATION_PATH . '/export/export_tournoi.xlsx','liste.xlsx');
 		
 		$zip->close();
 		
