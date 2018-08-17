@@ -1,0 +1,237 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Tcho
+ * Date: 15/08/2018
+ * Time: 22:54
+ */
+setlocale(LC_ALL, 'fr_FR');
+
+$teamMapper = new Default_Model_B2cTeamsMapper();
+
+foreach ($this->data as $key => $val):
+?>
+<div class="container" style="text-align:center">
+    <div>
+        <h1 class="text-center text-uppercase"
+            style="text-align:center;font-size:61px; color:#9b1a15; border-bottom:15px;width:100%;text-transform: uppercase">
+            <?php
+            echo utf8_encode(strftime('%A %d %B', strtotime($key)));
+
+            ?>
+
+        </h1>
+    </div>
+    <?php
+
+
+    $matchs = $val;
+
+    ?>
+
+    <table class="table table-bordered" style="width:100%" cellspacing="0">
+        <thead>
+        <tr>
+            <th>Horaires</th>
+            <th></th>
+            <th>&Eacute;quipes</th>
+            <th>Terrain</th>
+        </tr>
+
+        </thead>
+        <tbody>
+        <?php foreach ($matchs as $match): ?>
+
+
+            <tr>
+
+                <td align="center">
+
+                    <?php
+                    echo strftime('%H:%M', strtotime($match['debut']))
+                    ?>
+                    /
+                    <?php
+                    echo strftime('%H:%M', strtotime($match['fin']))
+                    ?>
+
+                </td>
+
+                <td align="center" class="libelle">
+                      <span>  <?php
+                          echo $match['libelle'];
+
+
+                          ?>
+                      </span>
+                </td>
+
+                <td align="center">
+                    <?php
+                    echo !empty($match['teamA']) ? $teamMapper->find($match['teamA'])->__get('nom') : $match['libelleA'];
+
+
+                    ?>
+                    -
+                    <?php
+                    echo !empty($match['teamB']) ? $teamMapper->find($match['teamB'])->__get('nom') : $match['libelleB'];
+
+
+                    ?>
+
+                </td>
+                <td align="center">
+
+                    <?php
+                    echo $match['terrain'];
+
+
+                    ?>
+
+                </td>
+
+            </tr>
+
+        <?php
+        endforeach;
+
+        ?>
+
+
+        </tbody>
+
+        <tfoot>
+
+        <tr>
+            <td colspan="4" align="center">
+
+                <?php
+
+                if ($key === '2018-08-18'):
+
+                    ?>
+                    Matchs de 55 mn.<br>
+                    Cap +1 en cas d'égalité ou -1 à la fin du temps
+
+                <?php
+                else :
+                    ?>
+                    Matchs de 60 mn.<br>
+                    Cap +2 systématique
+
+                <?php
+                endif;
+
+                ?>
+
+            </td>
+
+        </tr>
+
+        </tfoot>
+
+    </table>
+</div>
+<pagebreak>
+
+
+    <?php
+    endforeach;
+
+    $pouleMapper = new Default_Model_B2cPouleMapper();
+    $poules = $pouleMapper->fetchAll();
+    usort($poules, function ($a, $b) {
+        return $a['nom'] > $b['nom'] ? 1 : -1;
+
+    });
+    $teamMapper = new Default_Model_B2cTeamsMapper();
+
+    foreach ($poules
+
+             as $poule):
+
+        $teams = $teamMapper->fetchAll('id_poule=' . $poule['id_poule']);
+        usort($teams, function ($a, $b) {
+            return $a['nom'] > $b['nom'] ? 1 : -1;
+
+        });
+
+
+        ?>
+
+        <div>
+            <h1 class="text-center text-uppercase"
+                style="text-align:center;font-size:61px; color:#9b1a15; border-bottom:15px;width:100%;text-transform: uppercase">
+                <?php
+                echo $poule['nom'];
+
+                ?>
+
+            </h1>
+
+
+        <ul class="list-group" style="list-style: none">
+
+            <?php
+            foreach ($teams as $team) :
+                ?>
+
+                <li class="list-group-item text-center"
+                    style="font-size:16px; border:none;list-style: none;font-weight: bold; text-align:center;">
+                    <?php
+                    echo $team['nom'];
+
+                    ?>
+                </li>
+
+
+            <?php
+            endforeach;
+
+            ?>
+
+        </ul>
+        </div>
+    <?php
+    endforeach;
+
+    ?>
+    <style>
+
+        td {
+
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        td {
+            border-top: 1px solid black;
+            padding: 10px 0;
+
+        }
+
+        th {
+            text-align: center;
+            background: black;
+            color: white;
+            font-size: 13px;
+        }
+
+        footer {
+
+            padding-top: 100px;
+
+        }
+
+        footer td {
+            font-weight: normal;
+
+        }
+
+        td.libelle span {
+            font-weight: normal;
+
+        }
+
+
+    </style>

@@ -14,7 +14,7 @@ class Default_Model_DbTable_B2cmatchs extends Default_Model_DbTable_Table{
 	 * 
 	 * @var string $_name nom de la table
 	 */
- 	protected $_name="b2cmatchs";
+ 	protected $_name="b2cmatch";
     /**
      * 
      * @var boolean $use_prefix true= ajouter DBPREFIX au nom de la table

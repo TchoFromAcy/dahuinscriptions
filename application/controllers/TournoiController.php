@@ -33,4 +33,71 @@ class TournoiController extends Zend_Controller_Action
 
     public function indexAction(){}
 
+
+    public function showteamAction(){
+
+        $id_team=$this->getRequest()->getParam('id_team');
+
+
+        $teamMapper = new Default_Model_B2cTeamsMapper();
+
+        if(!$team=$teamMapper->find($id_team)) die('equipe introuvable');
+
+
+        $playersMapper = new Default_Model_TournoiMapper();
+        $players =$playersMapper->fetchAll('id_team='.$id_team);
+
+        $this->view->headLink()->prependStylesheet('//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css')->appendStylesheet('http://bornestocatch.dahultimate.com/_css/styles.css');
+        $this->_helper->layout->setLayout('tournoi-team');
+        $this->view->assign(['team'=>$team,'players'=>$players]);
+
+        $this->render("team");
+
+
+
+
+    }
+
+
+
+
+    public function showmatchsAction(){
+
+
+        $viewdata=[];
+
+        $matchsMapper = new Default_Model_B2cMatchsMapper();
+        $matchs=$matchsMapper->fetchAll('date="2018-08-18"');
+
+        usort($matchs, function($a, $b){
+
+            return new DateTime($a['debut'])>new DateTime($b['debut'])?1:-1;
+
+        });
+
+
+        $viewdata['2018-08-18']=$matchs;
+
+        $matchs2=$matchsMapper->fetchAll('date="2018-08-19"');
+
+        usort($matchs2, function($a, $b){
+
+
+            return new DateTime($a['debut'])>new DateTime($b['debut'])?1:-1;
+
+        });
+
+        $viewdata['2018-08-19']=$matchs2;
+
+        $this->view->headLink()->prependStylesheet('//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css')->appendStylesheet('http://bornestocatch.dahultimate.com/_css/styles.css');
+        $this->_helper->layout->setLayout('tournoi-team');
+        $this->view->assign('data',$viewdata);
+
+        $this->render("matchs");
+
+
+    }
+
+
+
 }

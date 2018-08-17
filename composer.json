@@ -12,6 +12,7 @@
         "middleout/third-party-connect": "dev-master",
         "facebook/php-sdk-v4": "^5.3",
         "mobiledetect/mobiledetectlib": "^2.8",
-        "phpoffice/phpspreadsheet": "^1.4"
+        "phpoffice/phpspreadsheet": "^1.4",
+        "mpdf/mpdf": "^7.1"
     }
 }

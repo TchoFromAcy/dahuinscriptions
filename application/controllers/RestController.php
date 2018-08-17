@@ -148,6 +148,15 @@ class RestController extends Zend_Controller_Action
 
     }
 
+    public function getMatchs(){
+        $mapper = new Default_Model_B2cMatchsMapper();
+
+        $results = $mapper->fetchAll();
+        return $this->sendJSONResponse(true, $results);
+
+
+    }
+
     /**
      * @param bool $success
      * @param array $results

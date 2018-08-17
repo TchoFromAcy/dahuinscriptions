@@ -70,7 +70,29 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 'module' => 'default'
             )
         );
-        $frontController->getRouter()->addRoute('restAPList     ', $restAPList);
+        $frontController->getRouter()->addRoute('restAPList', $restAPList);
+
+        $restAPList = new Zend_Controller_Router_Route(
+            'equipe/:id_team',
+            array(
+                'controller' => 'tournoi',
+                'action' => 'showTeam',
+                'module' => 'default'
+            )
+        );
+        $frontController->getRouter()->addRoute('showTeam', $restAPList);
+
+        $restAPList = new Zend_Controller_Router_Route(
+            'matchsList',
+            array(
+                'controller' => 'tournoi',
+                'action' => 'showMatchs',
+                'module' => 'default'
+            )
+        );
+        $frontController->getRouter()->addRoute('showMatchs', $restAPList);
+
+
 	}
 	
 	
